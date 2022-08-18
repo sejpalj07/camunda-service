@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_15s6wed" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="pizza-chef" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1bptf9f</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_006ga5q" messageRef="Message_3j2dqrd" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1bptf9f" sourceRef="StartEvent_1" targetRef="Activity_1kiev9u" />
+    <bpmn:sequenceFlow id="Flow_00b0az8" sourceRef="Activity_1kiev9u" targetRef="Event_0sdy5ai" />
+    <bpmn:endEvent id="Event_0nw2thb">
+      <bpmn:incoming>Flow_0hnochg</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_010a93w" messageRef="Message_03msg7e" camunda:delegateExpression="${PizzaStatusDelegate}" />
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_1kiev9u" name="make Pizza" camunda:delegateExpression="${PizzaDelegate}">
+      <bpmn:incoming>Flow_1bptf9f</bpmn:incoming>
+      <bpmn:outgoing>Flow_00b0az8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_0sdy5ai">
+      <bpmn:incoming>Flow_00b0az8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0hnochg</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1uknod5">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT60S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0hnochg" sourceRef="Event_0sdy5ai" targetRef="Event_0nw2thb" />
+  </bpmn:process>
+  <bpmn:message id="Message_3j2dqrd" name="PizzaCreationMessage" />
+  <bpmn:message id="Message_03msg7e" name="PizzaStatusMessage" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="pizza-chef">
+      <bpmndi:BPMNEdge id="Flow_0hnochg_di" bpmnElement="Flow_0hnochg">
+        <di:waypoint x="548" y="117" />
+        <di:waypoint x="662" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00b0az8_di" bpmnElement="Flow_00b0az8">
+        <di:waypoint x="410" y="117" />
+        <di:waypoint x="512" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bptf9f_di" bpmnElement="Flow_1bptf9f">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="310" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0j5anoa_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xw2fbo_di" bpmnElement="Event_0nw2thb">
+        <dc:Bounds x="662" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09wwoo9_di" bpmnElement="Activity_1kiev9u">
+        <dc:Bounds x="310" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m805qh_di" bpmnElement="Event_0sdy5ai">
+        <dc:Bounds x="512" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
