@@ -6,6 +6,8 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component("PizzaDelegate")
 public class PizzaDelegate implements JavaDelegate {
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="price-Calculator" name="priceCalculator" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
   <decision id="priceCalculator" name="priceCalculator">
-    <decisionTable id="DecisionTable_1jzl5vl" hitPolicy="ANY">
-      <input id="Input_1" label="Pizza Name" camunda:inputVariable="pizzaName">
+    <decisionTable id="DecisionTable_1jzl5vl" hitPolicy="COLLECT" aggregation="SUM">
+      <input id="Input_1" label="Menu Items" camunda:inputVariable="menuItem">
         <inputExpression id="InputExpression_1" typeRef="string" expressionLanguage="feel">
-          <text>eachItemList.itemName</text>
+          <text>eachItemList.ItemName</text>
         </inputExpression>
       </input>
-      <output id="Output_1" label="Price" name="pizzaPrice" typeRef="integer" biodi:width="192" />
+      <output id="Output_1" label="Price" name="itemPrice" typeRef="integer" biodi:width="192" />
       <rule id="DecisionRule_1yyhd69">
         <description>This is the price of Veggie Pizza.</description>
         <inputEntry id="UnaryTests_04x2avw">

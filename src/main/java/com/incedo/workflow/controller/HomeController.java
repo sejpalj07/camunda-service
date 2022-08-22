@@ -1,5 +1,6 @@
 package com.incedo.workflow.controller;
 
+import com.incedo.workflow.model.Item;
 import com.incedo.workflow.model.Order;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
@@ -8,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 public class HomeController {
@@ -27,7 +26,7 @@ public class HomeController {
 //        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("my-project", "12");
 //        return new ResponseEntity<>("User BPM is Running:"+processInstance.getId(), HttpStatus.OK);
 //    }
-//
+
 //    @GetMapping("/getAllTask/{processId}")
 //    public List<String> getAllTask(@PathVariable String processId){
 //        List<String> idList = runtimeService.getActiveActivityIds(processId);
@@ -50,22 +49,14 @@ public class HomeController {
 
     @PostMapping("/process")
     public ResponseEntity<String> invokeProcess(@RequestBody Order order){
+        List<Item> ItemList = new ArrayList<>();
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("order", order);
+        orderMap.put("ItemList", ItemList);
         Random random = new Random();
-        this.runtimeService.correlateMessage("orderMessage", String.valueOf(Math.abs(random.nextInt())), orderMap);
+        String bKey = String.valueOf(Math.abs(random.nextInt()));
+        this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }
-
-//    @PostMapping("/getTask")
-//    public ResponseEntity<String> getTask(){
-//        List<Task> taskList = this.taskService.createTaskQuery().taskUnassigned().list();
-//        String taskName = null;
-//        for(Task task:taskList){
-//            this.taskService.complete(task.getId());
-//            taskName = task.getName();
-//        }
-//        return new ResponseEntity<>( "Task " + taskName +" is completed.", HttpStatus.OK);
-//    }
 
 }
