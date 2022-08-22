@@ -4,7 +4,7 @@
     <decisionTable id="DecisionTable_1jzl5vl" hitPolicy="ANY">
       <input id="Input_1" label="Pizza Name" camunda:inputVariable="pizzaName">
         <inputExpression id="InputExpression_1" typeRef="string" expressionLanguage="feel">
-          <text>order.pizzaList[1].pizzaName</text>
+          <text>eachItemList.itemName</text>
         </inputExpression>
       </input>
       <output id="Output_1" label="Price" name="pizzaPrice" typeRef="integer" biodi:width="192" />

@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-
 @Component("FillDrinks")
 public class FillDrinks implements JavaDelegate {
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
