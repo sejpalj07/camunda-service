@@ -16,17 +16,19 @@ public class PizzaPrepareOrder implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Order order = (Order) execution.getVariable("order");
-        for (Pizza pizza : order.getPizzaList()) {
-            Map<String, Object> pizzaName = new HashMap<>();
-            pizzaName.put("pizza", pizza);
-            execution.getProcessEngineServices()
-                    .getRuntimeService()
-                    .createMessageCorrelation("PizzaCreationMessage")
-                    .setVariables(pizzaName)
-                    .correlate();
-            logger.info("pizza: " + pizza);
-        }
+        logger.info("PizzaPrepareOrder start");
+//        for (Pizza pizza : order.getPizzaList()) {
+        Pizza pizza = (Pizza) execution.getVariable("eachPizza");
+        Map<String, Object> pizzaName = new HashMap<>();
+        pizzaName.put("pizza", pizza);
+
+        execution.getProcessEngineServices()
+                .getRuntimeService()
+                .createMessageCorrelation("PizzaCreationMessage")
+                .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
+                .setVariables(pizzaName)
+                .correlate();
+        logger.info("pizza: " + pizza);
 
     }
 }

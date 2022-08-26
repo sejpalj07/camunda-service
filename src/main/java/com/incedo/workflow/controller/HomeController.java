@@ -51,7 +51,10 @@ public class HomeController {
     public ResponseEntity<String> invokeProcess(@RequestBody Order order){
         List<Item> ItemList = new ArrayList<>();
         Map<String, Object> orderMap = new HashMap<>();
-        orderMap.put("order", order);
+//        orderMap.put("order", order);
+        orderMap.put("pizzaList", order.getPizzaList());
+        orderMap.put("sideList", order.getSideList());
+        orderMap.put("drinksList", order.getDrinksList());
         orderMap.put("ItemList", ItemList);
         Random random = new Random();
         String bKey = String.valueOf(Math.abs(random.nextInt()));

@@ -1,8 +1,7 @@
-spring.datasource.url: jdbc:h2:file:./camunda-h2-database
-
+#spring.datasource.url: jdbc:h2:file:./camunda-h2-database
 camunda.bpm.admin-user:
   id: hari
-  password: hari
+  password: hari5679
 #logging:
 #  level:
 #    root: debug
