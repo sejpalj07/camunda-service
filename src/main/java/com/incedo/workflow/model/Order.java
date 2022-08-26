@@ -14,5 +14,6 @@ public class Order {
     private List<Pizza> pizzaList;
     private  List<Side> sideList;
     private List<String> drinksList;
+    private TransactionInfo transactionInfo;
 
 }

@@ -2,6 +2,7 @@ package com.incedo.workflow.controller;
 
 import com.incedo.workflow.model.Item;
 import com.incedo.workflow.model.Order;
+import com.incedo.workflow.model.TransactionInfo;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,34 @@ public class HomeController {
 //        return new ResponseEntity<>("Task completed", HttpStatus.OK);
 //    }
 
+    //example url: http://localhost:8080/process
+//    {
+//        "pizzaList": [
+//        {
+//            "pizzaId": 12,
+//                "pizzaName": "Veggie Pizza",
+//                "toppings": [
+//            "greenpapper",
+//                    "mushroom"
+//            ]
+//        }
+//    ],
+//        "sideList": [
+//        {
+//            "sideId": 12,
+//                "sideName": "Garlic Bread"
+//        }
+//    ],
+//        "drinksList": [
+//        "Soda"
+//    ],
+//        "transactionInfo": {
+//        "name": "person1",
+//                "account": 123,
+//                "balance": 1000,
+//                "billPrice": 5000
+//    }
+//    }
     @PostMapping("/process")
     public ResponseEntity<String> invokeProcess(@RequestBody Order order){
         List<Item> ItemList = new ArrayList<>();
@@ -58,5 +87,17 @@ public class HomeController {
         this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }
+
+    @PostMapping("/payment")
+    public ResponseEntity<String> payment(@RequestBody TransactionInfo transactionInfo){
+        List<Item> ItemList = new ArrayList<>();
+        Map<String, Object> orderMap = new HashMap<>();
+        orderMap.put("transactionInfo", transactionInfo);
+        Random random = new Random();
+        String bKey = String.valueOf(Math.abs(random.nextInt()));
+        this.runtimeService.correlateMessage("makepaymentMessage", bKey, orderMap);
+        return new ResponseEntity<>("Payment Processing BPM is Running.", HttpStatus.OK);
+    }
+
 
 }

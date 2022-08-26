@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item implements Serializable {
-    private String ItemName;
-    private int Price;
+public class TransactionInfo {
+    private String name;
+    private Long account;
+    private Long balance;
+    private Long billPrice;
 }
