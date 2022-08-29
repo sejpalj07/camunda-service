@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component("FillDrinks")
 public class FillDrinks implements JavaDelegate {
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private enum DrinksName {
         soda("Soda"),
@@ -37,7 +37,7 @@ public class FillDrinks implements JavaDelegate {
         Order order = (Order) execution.getVariable("order");
         List<Item> ItemList = (ArrayList<Item>) execution.getVariable("ItemList");
         for (String eachDrink : order.getDrinksList()) {
-            boolean isValidDrinkOrder = Arrays.stream(FillDrinks.DrinksName.values())
+            boolean isValidDrinkOrder = Arrays.stream(DrinksName.values())
                     .anyMatch((t) -> t.drink.equals(eachDrink));
             if(isValidDrinkOrder){
                 ItemList.add(new Item(eachDrink, 0));

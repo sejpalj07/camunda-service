@@ -22,6 +22,7 @@ public class PaymentPreprocessing implements JavaDelegate {
        TransactionInfo transactionInfo = order.getTransactionInfo();
             Map<String, Object> variables = new HashMap<>();
         variables.put("transactionInfo", transactionInfo);
+        variables.put("paymentType",transactionInfo.getPaymentType());
             execution.getProcessEngineServices()
                     .getRuntimeService()
                     .createMessageCorrelation("makepaymentMessage")

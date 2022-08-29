@@ -37,7 +37,7 @@ public class ValidateSideDelegate implements JavaDelegate {
         List<Item> ItemList = (ArrayList<Item>) execution.getVariable("ItemList");
         for (Side side : order.getSideList()) {
             String name = side.getSideName();
-            boolean isValidSideOrder = Arrays.stream(ValidateSideDelegate.SideName.values())
+            boolean isValidSideOrder = Arrays.stream(SideName.values())
                     .anyMatch((t) -> t.side.equals(name));
             if(isValidSideOrder){
                 ItemList.add(new Item(name, 0));

@@ -15,5 +15,10 @@ public class Order {
     private  List<Side> sideList;
     private List<String> drinksList;
     private TransactionInfo transactionInfo;
+    String deliveryType;
+    String pickupTime;
+    String address;
+    String validationMessage;
+    CustomerInfo customerInfo;
 
 }

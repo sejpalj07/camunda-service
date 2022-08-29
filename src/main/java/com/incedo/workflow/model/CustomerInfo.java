@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionInfo {
+public class CustomerInfo {
+    private String phonenumber;
     private String name;
-    private Long account;
-    private Long balance;
-    private Long billPrice;
-    private String paymentType;
 }

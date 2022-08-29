@@ -93,11 +93,18 @@ public class HomeController {
         List<Item> ItemList = new ArrayList<>();
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("transactionInfo", transactionInfo);
+        orderMap.put("paymentType",transactionInfo.getPaymentType());
         Random random = new Random();
         String bKey = String.valueOf(Math.abs(random.nextInt()));
         this.runtimeService.correlateMessage("makepaymentMessage", bKey, orderMap);
-        return new ResponseEntity<>("Payment Processing BPM is Running.", HttpStatus.OK);
+        return new ResponseEntity<>("Peyment Processing BPM is Running.", HttpStatus.OK);
     }
-
+    // example url: http://localhost:8080/payment
+//    {
+//        "name": "person1",
+//            "account": 123,
+//            "balance": 1000,
+//            "billPrice": 5000
+//    }
 
 }
