@@ -1,0 +1,14 @@
+2022-08-29 21:32:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACT_RU_METER_LOG" not found; SQL statement:
+insert into ACT_RU_METER_LOG (ID_, NAME_, REPORTER_, VALUE_, TIMESTAMP_, MILLISECONDS_)
+    values (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?
+    ) [42102-200]
+2022-08-29 21:32:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACT_GE_PROPERTY" not found; SQL statement:
+select * from ACT_GE_PROPERTY where NAME_ = ? [42102-200]

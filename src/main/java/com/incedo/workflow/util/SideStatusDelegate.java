@@ -1,5 +1,6 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.model.Side;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.LoggerFactory;
@@ -14,14 +15,18 @@ public class SideStatusDelegate implements JavaDelegate {
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        Side side = (Side) execution.getVariable("side");
         Map<String, Object> sideStatus = new HashMap<>();
-        sideStatus.put("sideStatus", "Order Completed");
+//        side.getSideName()
+        sideStatus.put("completedSide", side);
         execution.getProcessEngineServices()
                 .getRuntimeService()
                 .createMessageCorrelation("SideStatusMessage")
+                .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
                 .setVariables(sideStatus)
                 .correlate();
         logger.info("Side Status Message sent");
 
     }
 }
+

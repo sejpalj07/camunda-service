@@ -1,6 +1,5 @@
 package com.incedo.workflow.util;
 
-import com.incedo.workflow.model.Order;
 import com.incedo.workflow.model.Side;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -16,16 +15,16 @@ public class SidePrepareOrder implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Order order = (Order) execution.getVariable("order");
-        for (Side side : order.getSideList()) {
-            Map<String, Object> sideName = new HashMap<>();
-            sideName.put("side", side);
-            execution.getProcessEngineServices()
-                    .getRuntimeService()
-                    .createMessageCorrelation("sideCreationMessage")
-                    .setVariables(sideName)
-                    .correlate();
-        }
+        Side side = (Side) execution.getVariable("eachSide");
+        Map<String, Object> sideName = new HashMap<>();
+        sideName.put("side", side);
+        execution.getProcessEngineServices()
+                .getRuntimeService()
+                .createMessageCorrelation("sideCreationMessage")
+                .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
+                .setVariables(sideName)
+                .correlate();
 
     }
 }
+>>>>>>> f13bbabc373b7ae220dcb6ef85e16acf21ad8740

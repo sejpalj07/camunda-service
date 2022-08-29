@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 spring.datasource.url: jdbc:h2:file:./camunda-h2-database
 
 camunda.bpm.admin-user:
@@ -5,4 +6,12 @@ camunda.bpm.admin-user:
   password: hari
 #logging:
 #  level:
+=======
+#spring.datasource.url: jdbc:h2:file:./camunda-h2-database
+camunda.bpm.admin-user:
+  id: hari
+  password: hari5679
+#logging:
+#  level:
+>>>>>>> f13bbabc373b7ae220dcb6ef85e16acf21ad8740
 #    root: debug

@@ -19,7 +19,11 @@
       <bpmn:incoming>Flow_00b0az8</bpmn:incoming>
       <bpmn:outgoing>Flow_0hnochg</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_1uknod5">
+<<<<<<< HEAD
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+=======
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT15S</bpmn:timeDuration>
+>>>>>>> f13bbabc373b7ae220dcb6ef85e16acf21ad8740
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="Flow_0hnochg" sourceRef="Event_0sdy5ai" targetRef="Event_0nw2thb" />
