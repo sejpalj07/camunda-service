@@ -26,7 +26,7 @@ public class PizzaStatusDelegate implements JavaDelegate {
                 .createMessageCorrelation("PizzaStatusMessage")
                 .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
                 .setVariables(pizzaStatus)
-                .correlate();
+                .correlate(); //NPE
         logger.info("PizzaStatusDelegate end");
 
     }

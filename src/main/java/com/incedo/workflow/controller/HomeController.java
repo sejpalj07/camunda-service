@@ -56,8 +56,15 @@ public class HomeController {
         orderMap.put("sideList", order.getSideList());
         orderMap.put("drinksList", order.getDrinksList());
         orderMap.put("ItemList", ItemList);
+        orderMap.put("paymentType",order.getPaymentType());
+        orderMap.put("deliveryType",order.getDeliveryType());
+        orderMap.put("pickupTime",order.getPickupTime());
+        orderMap.put("address",order.getAddress());
+        orderMap.put("validationMessage",order.getValidationMessage());
+        orderMap.put("customerInfo",order.getCustomerInfo());
         Random random = new Random();
         String bKey = String.valueOf(Math.abs(random.nextInt()));
+
         this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }

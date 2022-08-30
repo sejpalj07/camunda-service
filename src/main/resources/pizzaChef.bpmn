@@ -7,7 +7,7 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1bptf9f" sourceRef="StartEvent_1" targetRef="Activity_1kiev9u" />
     <bpmn:sequenceFlow id="Flow_00b0az8" sourceRef="Activity_1kiev9u" targetRef="Event_0sdy5ai" />
-    <bpmn:endEvent id="Event_0nw2thb">
+    <bpmn:endEvent id="Event_0nw2thb" camunda:asyncBefore="true">
       <bpmn:incoming>Flow_0hnochg</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_010a93w" messageRef="Message_03msg7e" camunda:delegateExpression="${PizzaStatusDelegate}" />
     </bpmn:endEvent>
