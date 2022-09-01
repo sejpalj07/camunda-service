@@ -21,6 +21,7 @@ public class PizzaStatusDelegate implements JavaDelegate {
         Map<String, Object> pizzaStatus = new HashMap<>();
         pizzaStatus.put("completedPizza", pizza);
 
+        logger.info(execution.getProcessInstance().getProcessBusinessKey());
         execution.getProcessEngineServices()
                 .getRuntimeService()
                 .createMessageCorrelation("PizzaStatusMessage")
