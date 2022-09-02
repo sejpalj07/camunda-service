@@ -20,7 +20,7 @@ public class ValidateDrinksDelegate implements JavaDelegate {
     private enum DrinksName {
         soda("Soda"),
         tea("Iced Tea"),
-        water("water");
+        water("Water");
         private final String drink;
 
         DrinksName(final String drink) {

@@ -164,16 +164,12 @@
     <bpmn:endEvent id="Event_0jz5teu">
       <bpmn:incoming>Flow_03dxqo8</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="receiptPayment" name="Print receipt and make Payment">
-      <bpmn:incoming>Flow_06lyiew</bpmn:incoming>
-      <bpmn:outgoing>Flow_03dxqo8</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_03dxqo8" sourceRef="receiptPayment" targetRef="Event_0jz5teu" />
     <bpmn:businessRuleTask id="calculateTotal" name="calculate Total Charge" camunda:asyncBefore="true" camunda:resultVariable="Price" camunda:decisionRef="priceCalculator" camunda:mapDecisionResult="singleEntry">
       <bpmn:incoming>Flow_1436yzf</bpmn:incoming>
       <bpmn:outgoing>Flow_06lyiew</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="ItemList" camunda:elementVariable="eachItemList">
-        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">4</bpmn:loopCardinality>
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${pizzaList.size()+sideList.size()+drinksList.size()}</bpmn:loopCardinality>
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:businessRuleTask>
     <bpmn:sequenceFlow id="Flow_06lyiew" sourceRef="calculateTotal" targetRef="receiptPayment" />
@@ -229,7 +225,7 @@
       <bpmn:incoming>Flow_04d64ok</bpmn:incoming>
       <bpmn:outgoing>Flow_0mlrcb1</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="sideList" camunda:elementVariable="eachSide">
-        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">1</bpmn:loopCardinality>
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${sideList.size()}</bpmn:loopCardinality>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Event_0otjpd4">
         <bpmn:outgoing>Flow_1mgtry6</bpmn:outgoing>
@@ -270,7 +266,7 @@
       <bpmn:incoming>Flow_0840q4x</bpmn:incoming>
       <bpmn:outgoing>Flow_1nq20ue</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="drinksList" camunda:elementVariable="eachDrink">
-        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">2</bpmn:loopCardinality>
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${drinksList.size()}</bpmn:loopCardinality>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Event_1ip3oza">
         <bpmn:outgoing>Flow_05dqm9c</bpmn:outgoing>
@@ -306,6 +302,10 @@
     <bpmn:sequenceFlow id="Flow_0840q4x" sourceRef="Activity_0golmdj" targetRef="Activity_0n399fc" />
     <bpmn:sequenceFlow id="Flow_1nq20ue" sourceRef="Activity_0n399fc" targetRef="Gateway_1t3xbl2" />
     <bpmn:sequenceFlow id="Flow_1436yzf" sourceRef="Gateway_1t3xbl2" targetRef="calculateTotal" />
+    <bpmn:serviceTask id="receiptPayment" name="Print receipt and make Payment" camunda:delegateExpression="${ReceiptPayment}">
+      <bpmn:incoming>Flow_06lyiew</bpmn:incoming>
+      <bpmn:outgoing>Flow_03dxqo8</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:textAnnotation id="TextAnnotation_0isqirg">
       <bpmn:text>Create an API which can publish a message Pick 
 1) Combo menu
@@ -412,7 +412,7 @@
         <di:waypoint x="410" y="1310" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_17qd3ba_di" bpmnElement="Flow_17qd3ba">
-        <di:waypoint x="1495" y="390" />
+        <di:waypoint x="1485" y="390" />
         <di:waypoint x="1580" y="390" />
         <di:waypoint x="1580" y="502" />
       </bpmndi:BPMNEdge>
@@ -439,9 +439,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0wtbaa7_di" bpmnElement="Flow_0wtbaa7">
         <di:waypoint x="1400" y="188" />
-        <di:waypoint x="1423" y="188" />
-        <di:waypoint x="1423" y="390" />
-        <di:waypoint x="1445" y="390" />
+        <di:waypoint x="1460" y="188" />
+        <di:waypoint x="1460" y="365" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_04d64ok_di" bpmnElement="Flow_04d64ok">
         <di:waypoint x="630" y="390" />
@@ -449,7 +448,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0mlrcb1_di" bpmnElement="Flow_0mlrcb1">
         <di:waypoint x="1380" y="390" />
-        <di:waypoint x="1445" y="390" />
+        <di:waypoint x="1435" y="390" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0840q4x_di" bpmnElement="Flow_0840q4x">
         <di:waypoint x="630" y="550" />
@@ -457,14 +456,13 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1nq20ue_di" bpmnElement="Flow_1nq20ue">
         <di:waypoint x="1210" y="585" />
-        <di:waypoint x="1420" y="585" />
-        <di:waypoint x="1420" y="390" />
-        <di:waypoint x="1445" y="390" />
+        <di:waypoint x="1460" y="585" />
+        <di:waypoint x="1460" y="415" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1436yzf_di" bpmnElement="Flow_1436yzf">
-        <di:waypoint x="1470" y="365" />
-        <di:waypoint x="1470" y="300" />
-        <di:waypoint x="1530" y="300" />
+        <di:waypoint x="1485" y="390" />
+        <di:waypoint x="1540" y="390" />
+        <di:waypoint x="1540" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_06gjiw0_di" bpmnElement="received-order">
         <dc:Bounds x="202" y="372" width="36" height="36" />
@@ -474,9 +472,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_11ln59r_di" bpmnElement="Gateway_0knz79p">
         <dc:Bounds x="405" y="365" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0uflz4d_di" bpmnElement="Gateway_1t3xbl2">
-        <dc:Bounds x="1445" y="365" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0zxkfnx_di" bpmnElement="side-validation">
         <dc:Bounds x="530" y="350" width="100" height="80" />
@@ -504,6 +499,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0xq55g8_di" bpmnElement="Gateway_0i8ie1t">
         <dc:Bounds x="305" y="365" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0uflz4d_di" bpmnElement="Gateway_1t3xbl2">
+        <dc:Bounds x="1435" y="365" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0abhlx6_di" bpmnElement="receiptPayment">
+        <dc:Bounds x="1690" y="260" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0g4xxmh_di" bpmnElement="Activity_1x3ddg5" isExpanded="true">
         <dc:Bounds x="420" y="710" width="820" height="350" />
@@ -609,10 +610,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0jz5teu_di" bpmnElement="Event_0jz5teu">
         <dc:Bounds x="2002" y="282" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0nqzabh_di" bpmnElement="receiptPayment">
-        <dc:Bounds x="1690" y="260" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_13p18ww_di" bpmnElement="calculateTotal">
         <dc:Bounds x="1530" y="260" width="100" height="80" />
