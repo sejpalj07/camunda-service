@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1v06yjj" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="paymentSystem" name="paymentSystem" isExecutable="true" camunda:versionTag="1.0">
+    <bpmn:startEvent id="makepaymentMessage" name="makepaymentMessage">
+      <bpmn:outgoing>Flow_0rkhfu1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_027qlku" messageRef="Message_1kf7in0" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0rkhfu1" sourceRef="makepaymentMessage" targetRef="Gateway_0f1xtmu" />
+    <bpmn:serviceTask id="validateAccountBalance" name="Validate Account Balance" camunda:asyncAfter="true" camunda:delegateExpression="${ValidateAccountBalance}">
+      <bpmn:incoming>Flow_0fx2jaq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rhqnj3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0rhqnj3" sourceRef="validateAccountBalance" targetRef="Gateway_06nrufu" />
+    <bpmn:subProcess id="Activity_0kxm2kd">
+      <bpmn:incoming>Flow_0d0ecyr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1oyd5bm</bpmn:outgoing>
+      <bpmn:startEvent id="Event_06fgz1b">
+        <bpmn:outgoing>Flow_1gaqfyw</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="DebitDelegate" name="DebitDelegate" camunda:delegateExpression="${DebitDelegate}">
+        <bpmn:incoming>Flow_1gaqfyw</bpmn:incoming>
+        <bpmn:outgoing>Flow_1mfo09y</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="CreditDelegate" name="CreditDelegate" camunda:delegateExpression="${CreditDelegate}">
+        <bpmn:incoming>Flow_1mfo09y</bpmn:incoming>
+        <bpmn:outgoing>Flow_0w5ap2l</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1gaqfyw" sourceRef="Event_06fgz1b" targetRef="DebitDelegate" />
+      <bpmn:sequenceFlow id="Flow_1mfo09y" sourceRef="DebitDelegate" targetRef="CreditDelegate" />
+      <bpmn:endEvent id="Event_11z9bgl">
+        <bpmn:incoming>Flow_0w5ap2l</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0w5ap2l" sourceRef="CreditDelegate" targetRef="Event_11z9bgl" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_1oyd5bm" sourceRef="Activity_0kxm2kd" targetRef="onlinepay" />
+    <bpmn:endEvent id="paymentProcessCompletionMessage" name="paymentProcessCompletionMessage" camunda:asyncBefore="true">
+      <bpmn:incoming>Flow_1lor0rp</bpmn:incoming>
+      <bpmn:incoming>Flow_1nfcqx7</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0t3hts3" messageRef="Message_1g8tkl1" camunda:delegateExpression="${UpdatePaymentStatus}" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="paymentProcessFailureMessage" name="paymentProcessFailureMessage">
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1hkhuee" messageRef="Message_2ntvn16" camunda:delegateExpression="${UpdatePaymentStatus}" />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_06nrufu" default="Flow_0uyu6ql">
+      <bpmn:incoming>Flow_0rhqnj3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d0ecyr</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0uyu6ql</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0d0ecyr" name="${sufficientBalance == true}" sourceRef="Gateway_06nrufu" targetRef="Activity_0kxm2kd">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sufficientBalance == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0uyu6ql" sourceRef="Gateway_06nrufu" targetRef="cashPayment" />
+    <bpmn:exclusiveGateway id="Gateway_0f1xtmu" default="Flow_01cfl7k">
+      <bpmn:incoming>Flow_0rkhfu1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fx2jaq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_01cfl7k</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0fx2jaq" name="${payment == &#34;online&#34;}" sourceRef="Gateway_0f1xtmu" targetRef="validateAccountBalance">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${paymentType == "online"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_01cfl7k" sourceRef="Gateway_0f1xtmu" targetRef="cashPayment" />
+    <bpmn:sequenceFlow id="Flow_1lor0rp" sourceRef="cashPayment" targetRef="paymentProcessCompletionMessage" />
+    <bpmn:sequenceFlow id="Flow_1nfcqx7" sourceRef="onlinepay" targetRef="paymentProcessCompletionMessage" />
+    <bpmn:serviceTask id="cashPayment" name="cashPayment" camunda:delegateExpression="${CashPayment}">
+      <bpmn:incoming>Flow_0uyu6ql</bpmn:incoming>
+      <bpmn:incoming>Flow_01cfl7k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lor0rp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="onlinepay" name="onlinepay" camunda:delegateExpression="${OnlinePayment}">
+      <bpmn:incoming>Flow_1oyd5bm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nfcqx7</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmn:message id="Message_1kf7in0" name="makepaymentMessage" />
+  <bpmn:message id="Message_3ubph5q" name="paymentProcessCompletionMessage" />
+  <bpmn:message id="Message_2ntvn16" name="paymentProcessFailureMessage" />
+  <bpmn:message id="Message_1g8tkl1" name="paymentcompletionmessage" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="paymentSystem">
+      <bpmndi:BPMNEdge id="Flow_1nfcqx7_di" bpmnElement="Flow_1nfcqx7">
+        <di:waypoint x="1030" y="630" />
+        <di:waypoint x="1030" y="680" />
+        <di:waypoint x="808" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lor0rp_di" bpmnElement="Flow_1lor0rp">
+        <di:waypoint x="580" y="630" />
+        <di:waypoint x="580" y="680" />
+        <di:waypoint x="772" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01cfl7k_di" bpmnElement="Flow_01cfl7k">
+        <di:waypoint x="310" y="515" />
+        <di:waypoint x="310" y="590" />
+        <di:waypoint x="530" y="590" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fx2jaq_di" bpmnElement="Flow_0fx2jaq">
+        <di:waypoint x="310" y="465" />
+        <di:waypoint x="310" y="400" />
+        <di:waypoint x="430" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="265" y="356" width="68" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uyu6ql_di" bpmnElement="Flow_0uyu6ql">
+        <di:waypoint x="580" y="425" />
+        <di:waypoint x="580" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d0ecyr_di" bpmnElement="Flow_0d0ecyr">
+        <di:waypoint x="605" y="400" />
+        <di:waypoint x="780" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636" y="356" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oyd5bm_di" bpmnElement="Flow_1oyd5bm">
+        <di:waypoint x="1030" y="470" />
+        <di:waypoint x="1030" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rhqnj3_di" bpmnElement="Flow_0rhqnj3">
+        <di:waypoint x="530" y="400" />
+        <di:waypoint x="555" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rkhfu1_di" bpmnElement="Flow_0rkhfu1">
+        <di:waypoint x="198" y="490" />
+        <di:waypoint x="285" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1kgbfh3_di" bpmnElement="makepaymentMessage">
+        <dc:Bounds x="162" y="472" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="138" y="515" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ahwavg_di" bpmnElement="validateAccountBalance">
+        <dc:Bounds x="430" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1y9cz8z_di" bpmnElement="Activity_0kxm2kd" isExpanded="true">
+        <dc:Bounds x="780" y="320" width="410" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0w5ap2l_di" bpmnElement="Flow_0w5ap2l">
+        <di:waypoint x="1100" y="400" />
+        <di:waypoint x="1132" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mfo09y_di" bpmnElement="Flow_1mfo09y">
+        <di:waypoint x="970" y="400" />
+        <di:waypoint x="1000" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gaqfyw_di" bpmnElement="Flow_1gaqfyw">
+        <di:waypoint x="838" y="400" />
+        <di:waypoint x="870" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_06fgz1b_di" bpmnElement="Event_06fgz1b">
+        <dc:Bounds x="801.6666666666667" y="382" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xvx2gh_di" bpmnElement="DebitDelegate">
+        <dc:Bounds x="870" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y7uzg3_di" bpmnElement="CreditDelegate">
+        <dc:Bounds x="1000" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11z9bgl_di" bpmnElement="Event_11z9bgl">
+        <dc:Bounds x="1132" y="382" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bcbo61_di" bpmnElement="paymentProcessCompletionMessage">
+        <dc:Bounds x="772" y="662" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="749" y="705" width="83" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1t8f7w5_di" bpmnElement="paymentProcessFailureMessage">
+        <dc:Bounds x="562" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="535" y="84.5" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_06nrufu_di" bpmnElement="Gateway_06nrufu" isMarkerVisible="true">
+        <dc:Bounds x="555" y="375" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0f1xtmu_di" bpmnElement="Gateway_0f1xtmu" isMarkerVisible="true">
+        <dc:Bounds x="285" y="465" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0cfu6vf_di" bpmnElement="cashPayment">
+        <dc:Bounds x="530" y="550" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yk8a4t_di" bpmnElement="onlinepay">
+        <dc:Bounds x="980" y="550" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

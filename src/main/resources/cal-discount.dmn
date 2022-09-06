@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_0lrr523" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.1.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <decision id="cal-discount" name="cal-discount">
+    <decisionTable id="DecisionTable_0h1nlqo" hitPolicy="FIRST">
+      <input id="Input_1" label="price" camunda:inputVariable="price">
+        <inputExpression id="InputExpression_1" typeRef="integer">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1vzr1my" label="category" camunda:inputVariable="category">
+        <inputExpression id="LiteralExpression_12wr2ua" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="discount" name="discount" typeRef="integer" />
+      <rule id="DecisionRule_09j3fn4">
+        <inputEntry id="UnaryTests_1ummgiu">
+          <text>&lt;= 100</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dipbbz">
+          <text>"ctg1"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1x8nxz8">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_06w0hrn">
+        <inputEntry id="UnaryTests_0y541zs">
+          <text>&lt;= 500</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16rslqe">
+          <text>"ctg1"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1v0adnr">
+          <text>15</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0nw1xhj">
+        <inputEntry id="UnaryTests_1p1tukw">
+          <text>&gt; 500</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1iax8wy">
+          <text>"ctg1"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0z430vb">
+          <text>20</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_06dbrg9">
+        <inputEntry id="UnaryTests_0z2c689">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0d4bteh">
+          <text>"ctg2"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0adp9zb">
+          <text>50</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="cal-discount">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
