@@ -1,14 +1,9 @@
 package com.incedo.workflow.util;
 
-import com.incedo.workflow.model.Order;
-import com.incedo.workflow.model.Pizza;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component("CreditDelegate")
 public class CreditDelegate implements JavaDelegate {

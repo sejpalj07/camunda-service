@@ -1,5 +1,7 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.ListEmptyException;
 import com.incedo.workflow.model.Side;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -17,9 +19,10 @@ public class ValidateSideDelegate implements JavaDelegate {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private enum SideName {
-        bread("Garlic Bread"),
-        fries("Fries"),
-        wings("Wings");
+        BREAD("Garlic Bread"),
+        FRIES("Fries"),
+        ABC("abc"),
+        WINGS("Wings");
         private final String side;
         SideName(final String side) {
             this.side = side;
@@ -41,11 +44,13 @@ public class ValidateSideDelegate implements JavaDelegate {
                     .anyMatch((t) -> t.side.equals(name));
             if(isValidSideOrder){
                 newSideList.add(side);
-               //delete side
-               // sideList.remove(side);
-//                logger.info("After removal:" + sideList);
             }
         }
-        execution.setVariable("sideList", newSideList);
+        if (newSideList.isEmpty()) {
+            logger.error(BPMNErrorList.ERROR_INVALID_SIDE_LIST + ": sideList is Empty with Business key: " + execution.getProcessBusinessKey());
+            throw new ListEmptyException(BPMNErrorList.ERROR_INVALID_SIDE_LIST, "sideList is Empty.");
+        } else {
+            execution.setVariable("sideList", newSideList);
+        }
     }
 }

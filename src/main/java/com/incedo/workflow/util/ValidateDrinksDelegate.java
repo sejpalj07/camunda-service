@@ -1,7 +1,7 @@
 package com.incedo.workflow.util;
 
-import com.incedo.workflow.model.Item;
-import com.incedo.workflow.model.Order;
+import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.ListEmptyException;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -18,9 +18,10 @@ public class ValidateDrinksDelegate implements JavaDelegate {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private enum DrinksName {
-        soda("Soda"),
-        tea("Iced Tea"),
-        water("Water");
+        SODA("Soda"),
+        TEA("Iced Tea"),
+        FANTA("Fanta"),
+        WATER("Water");
         private final String drink;
 
         DrinksName(final String drink) {
@@ -44,6 +45,11 @@ public class ValidateDrinksDelegate implements JavaDelegate {
                 newDrinksList.add(eachDrink);
             }
         }
-        execution.setVariable("drinksList", newDrinksList);
+        if (newDrinksList.isEmpty()) {
+            logger.error(BPMNErrorList.ERROR_INVALID_DRINKS_LIST + ": drinksList is Empty with Business key: " + execution.getProcessBusinessKey());
+            throw new ListEmptyException(BPMNErrorList.ERROR_INVALID_DRINKS_LIST, "drinksList is Empty.");
+        } else {
+            execution.setVariable("drinksList", newDrinksList);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.ListEmptyException;
 import com.incedo.workflow.model.Pizza;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -12,13 +14,12 @@ import java.util.List;
 
 @Component("ValidatePizzaDelegate")
 public class ValidatePizzaDelegate implements JavaDelegate {
-
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private enum PizzaName {
-        veggie("Veggie Pizza"),
-        cheese("Cheese Pizza"),
-        meat("Meat Pizza");
+        VEGGIE("Veggie Pizza"),
+        CHEESE("Cheese Pizza"),
+        MEAT("Meat Pizza"),
+        CHICKEN("Chicken Pizza");
         private final String pizza;
         PizzaName(final String pizza) {
             this.pizza = pizza;
@@ -34,8 +35,6 @@ public class ValidatePizzaDelegate implements JavaDelegate {
         List<Pizza> pizzaList = (List<Pizza>) execution.getVariable("pizzaList");
         List<Pizza> newPizzaList = new ArrayList<>();
         logger.info("start validate pizza");
-//        String bKey = (String) execution.getProcessBusinessKey();
-//        for (Pizza pizza : order.getPizzaList()) {
         for (Pizza pizza : pizzaList) {
             String name = pizza.getPizzaName();
             boolean isValidPizzaOrder = Arrays.stream(PizzaName.values())
@@ -44,7 +43,13 @@ public class ValidatePizzaDelegate implements JavaDelegate {
                 newPizzaList.add(pizza);
             }
         }
-        execution.setVariable("pizzaList", newPizzaList);
+        if (newPizzaList.isEmpty()) {
+            logger.error(BPMNErrorList.ERROR_INVALID_PIZZA_LIST + ": PizzaList is Empty with Business key: " + execution.getProcessBusinessKey());
+            throw new ListEmptyException(BPMNErrorList.ERROR_INVALID_PIZZA_LIST, "PizzaList is Empty.");
+        } else {
+            execution.setVariable("pizzaList", newPizzaList);
+        }
+
         logger.info("end validate pizza");
     }
 }

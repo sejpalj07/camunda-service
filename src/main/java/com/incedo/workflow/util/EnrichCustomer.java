@@ -1,7 +1,6 @@
 package com.incedo.workflow.util;
 
 import com.incedo.workflow.model.CustomerInfo;
-import com.incedo.workflow.model.Order;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,7 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.PriceNotFound;
 import com.incedo.workflow.model.Item;
 import com.incedo.workflow.model.Pizza;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -19,11 +21,16 @@ public class AddPizzaPrice implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Pizza pizza = (Pizza) execution.getVariable("completedPizza");
-        int pizzaPrice = (int) execution.getVariable("pizzaPrice");
-//        execution.removeVariable("completedPizza");
         List<Item> ItemList = (ArrayList<Item>) execution.getVariable("ItemList");
-        ItemList.add(new Item(pizza.getPizzaId(), pizza.getPizzaName(), pizzaPrice, pizza.getToppings()));
-        execution.setVariable("ItemList", ItemList);
+        Pizza pizza = new Pizza();
+        try{
+            pizza = (Pizza) execution.getVariable("completedPizza");
+            int pizzaPrice = (int) execution.getVariable("pizzaPrice");
+            ItemList.add(new Item(pizza.getPizzaId(), pizza.getPizzaName(), pizzaPrice, pizza.getToppings()));
+            execution.setVariable("ItemList", ItemList);
+        } catch (NullPointerException ex){
+            logger.error(BPMNErrorList.ERROR_PRICE_NOT_FOUND_PIZZA + ": "+ pizza + " can't added to the list. Price Of the Item not Found.");
+            throw new PriceNotFound(BPMNErrorList.ERROR_PRICE_NOT_FOUND_PIZZA, pizza + " can't added to the list. Price Of the Item not Found.");
+        }
     }
 }

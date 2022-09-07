@@ -15,13 +15,10 @@ public class PizzaStatusDelegate implements JavaDelegate {
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-
         logger.info("PizzaStatusDelegate start");
         Pizza pizza = (Pizza) execution.getVariable("pizza");
         Map<String, Object> pizzaStatus = new HashMap<>();
         pizzaStatus.put("completedPizza", pizza);
-
-        logger.info(execution.getProcessInstance().getProcessBusinessKey());
         execution.getProcessEngineServices()
                 .getRuntimeService()
                 .createMessageCorrelation("PizzaStatusMessage")
@@ -29,6 +26,5 @@ public class PizzaStatusDelegate implements JavaDelegate {
                 .setVariables(pizzaStatus)
                 .correlate(); //NPE
         logger.info("PizzaStatusDelegate end");
-
     }
 }
