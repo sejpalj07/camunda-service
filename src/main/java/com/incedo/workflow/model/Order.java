@@ -2,6 +2,7 @@ package com.incedo.workflow.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.util.Date;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ public class Order implements Serializable {
     private  List<Side> sideList;
     private List<String> drinksList;
     String deliveryType;
-    String pickupTime;
+    Date pickupTime;
     String address;
     String validationMessage;
     String paymentType;

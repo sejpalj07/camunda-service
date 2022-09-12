@@ -44,6 +44,7 @@ public class ValidateDrinksDelegate implements JavaDelegate {
                 newDrinksList.add(eachDrink);
             }
         }
+        //execution.getProcessEngine().getRuntimeService()
         execution.setVariable("drinksList", newDrinksList);
     }
 }
