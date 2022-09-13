@@ -29,8 +29,8 @@ public class SidePrepareOrder implements JavaDelegate {
                     .correlate();
         } catch (Exception ex) {
             String msg = "Can't Correlate " + side + "because of " + ex.getMessage();
-            logger.error(BPMNErrorList.ERROR_CORRELATION_SIDE + msg + "with Business key: " + execution.getProcessBusinessKey());
-            throw new ListEmptyException(BPMNErrorList.ERROR_CORRELATION_SIDE, msg);
+            logger.error(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE + msg + "with Business key: " + execution.getProcessBusinessKey());
+//            throw new ListEmptyException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE, msg);
         }
 
 

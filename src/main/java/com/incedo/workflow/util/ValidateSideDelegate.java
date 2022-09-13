@@ -44,11 +44,14 @@ public class ValidateSideDelegate implements JavaDelegate {
                     .anyMatch((t) -> t.side.equals(name));
             if(isValidSideOrder){
                 newSideList.add(side);
+            } else {
+                logger.error(BPMNErrorList.ERROR_ITEM_INVALID + ": InValid Side Item: " + side + "\n with Business Key: " + execution.getProcessBusinessKey());
+//                throw new ListEmptyException(BPMNErrorList.ERROR_ITEM_INVALID, "InValid Side Item" + side + " with Business Key: " + execution.getProcessBusinessKey());
             }
         }
         if (newSideList.isEmpty()) {
-            logger.error(BPMNErrorList.ERROR_INVALID_SIDE_LIST + ": sideList is Empty with Business key: " + execution.getProcessBusinessKey());
-            throw new ListEmptyException(BPMNErrorList.ERROR_INVALID_SIDE_LIST, "sideList is Empty.");
+            logger.error(BPMNErrorList.ERROR_EMPTY_LIST + ": sideList is Empty, with Business key: " + execution.getProcessBusinessKey());
+//            throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "sideList is Empty, with Business key: " + execution.getProcessBusinessKey());
         } else {
             execution.setVariable("sideList", newSideList);
         }

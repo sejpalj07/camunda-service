@@ -21,6 +21,7 @@ public class PaymentSystemCall implements JavaDelegate {
             execution.getProcessEngineServices()
                     .getRuntimeService()
                     .createMessageCorrelation("makepaymentMessage")
+                    .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
                     .setVariables(variables)
                     .correlate();
             logger.info("makepaymentMessage Message sent");

@@ -40,14 +40,17 @@ public class ValidateDrinksDelegate implements JavaDelegate {
         List<String> newDrinksList = new ArrayList<>();
         for (String eachDrink : drinksList) {
             boolean isValidDrinkOrder = Arrays.stream(ValidateDrinksDelegate.DrinksName.values())
-                    .anyMatch((t) -> t.drink.equals(eachDrink));
+                    .anyMatch(t -> t.drink.equals(eachDrink));
             if (isValidDrinkOrder) {
                 newDrinksList.add(eachDrink);
+            } else {
+                logger.error(BPMNErrorList.ERROR_ITEM_INVALID + ": InValid Drinks Item: " + eachDrink + "\n with Business Key: " + execution.getProcessBusinessKey());
+//                throw new ListEmptyException(BPMNErrorList.ERROR_ITEM_INVALID, "InValid Drinks Item" + eachDrink + " with Business Key: " + execution.getProcessBusinessKey());
             }
         }
         if (newDrinksList.isEmpty()) {
-            logger.error(BPMNErrorList.ERROR_INVALID_DRINKS_LIST + ": drinksList is Empty with Business key: " + execution.getProcessBusinessKey());
-            throw new ListEmptyException(BPMNErrorList.ERROR_INVALID_DRINKS_LIST, "drinksList is Empty.");
+            logger.error(BPMNErrorList.ERROR_EMPTY_LIST + ": drinksList is Empty, with Business key: " + execution.getProcessBusinessKey());
+//            throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "drinksList is Empty, with Business key: " + execution.getProcessBusinessKey());
         } else {
             execution.setVariable("drinksList", newDrinksList);
         }

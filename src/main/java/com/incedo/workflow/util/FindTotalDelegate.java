@@ -15,9 +15,9 @@ public class FindTotalDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        List<Item> ItemList = (List<Item>) execution.getVariable("ItemList");
+        List<Item> itemList = (List<Item>) execution.getVariable("itemList");
         int total = 0;
-        for (Item item:ItemList) {
+        for (Item item:itemList) {
             total = total + item.getPrice();
         }
         execution.setVariable("total", total);

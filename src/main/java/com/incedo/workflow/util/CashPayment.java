@@ -11,6 +11,7 @@ public class CashPayment implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        execution.setVariable("sufficientBalance", true);
         logger.info("Entered CashPayment");
     }
 

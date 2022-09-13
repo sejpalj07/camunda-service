@@ -16,30 +16,16 @@ public class UpdatePaymentStatus implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         logger.info("Entered UpdatePaymentStatus");
         Boolean sufficientBalance = (Boolean) execution.getVariable("sufficientBalance");
-        if (sufficientBalance) {
             logger.info("sufficientBalance " + sufficientBalance + " payment successful");
+            logger.info(">>>>>>>>>>>>>>>>>>"+execution.getProcessInstance().getProcessBusinessKey());
             Map<String, Object> variables = new HashMap<>();
             variables.put("sufficientBalance", sufficientBalance);
             execution.getProcessEngineServices()
                     .getRuntimeService()
                     .createMessageCorrelation("paymentcompletionmessage")
+                    .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
                     .setVariables(variables)
                     .correlate();
-            logger.info("paymentcompletionmessage Message sent");
-        } else {
-
-            logger.info("sufficientBalance " + sufficientBalance + " payment failure");
-            Map<String, Object> variables = new HashMap<>();
-            variables.put("sufficientBalance", sufficientBalance);
-            execution.getProcessEngineServices()
-                    .getRuntimeService()
-                    .createMessageCorrelation("paymentProcessFailureMessage")
-                    .setVariables(variables)
-                    .correlate();
-            logger.info("paymentProcessFailureMessage Message sent");
-        }
-
-
-
+            logger.info("payment completion Message sent");
     }
 }

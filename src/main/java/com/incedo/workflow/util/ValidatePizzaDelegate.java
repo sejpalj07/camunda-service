@@ -32,6 +32,7 @@ public class ValidatePizzaDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        logger.info(">>>>>>>>>>>>>>>>>>"+execution.getProcessInstance().getProcessBusinessKey());
         List<Pizza> pizzaList = (List<Pizza>) execution.getVariable("pizzaList");
         List<Pizza> newPizzaList = new ArrayList<>();
         logger.info("start validate pizza");
@@ -41,15 +42,17 @@ public class ValidatePizzaDelegate implements JavaDelegate {
                     .anyMatch((t) -> t.pizza.equals(name));
             if (isValidPizzaOrder) {
                 newPizzaList.add(pizza);
+            } else {
+                logger.error(BPMNErrorList.ERROR_ITEM_INVALID + ": InValid Pizza Item: " + pizza + "\n with Business Key: " + execution.getProcessBusinessKey());
+//                throw new ListEmptyException(BPMNErrorList.ERROR_ITEM_INVALID, "InValid Pizza Item" + pizza + " with Business Key: " + execution.getProcessBusinessKey());
             }
         }
         if (newPizzaList.isEmpty()) {
-            logger.error(BPMNErrorList.ERROR_INVALID_PIZZA_LIST + ": PizzaList is Empty with Business key: " + execution.getProcessBusinessKey());
-            throw new ListEmptyException(BPMNErrorList.ERROR_INVALID_PIZZA_LIST, "PizzaList is Empty.");
+            logger.error(BPMNErrorList.ERROR_EMPTY_LIST + ": PizzaList is Empty with Business key: " + execution.getProcessBusinessKey());
+//            throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "PizzaList is Empty, with Business Key" + execution.getProcessBusinessKey());
         } else {
             execution.setVariable("pizzaList", newPizzaList);
         }
-
         logger.info("end validate pizza");
     }
 }
