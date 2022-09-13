@@ -1,15 +1,14 @@
 package com.incedo.workflow.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class TestDelegate implements JavaDelegate {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        logger.info("Test From Sub-Process.");
-        int test =  5/0;
+        log.info("Test From Sub-Process.");
+        int test = 5 / 0;
     }
 }

@@ -15,7 +15,7 @@ public class Order implements Serializable {
     @NotNull(message = "PizzaList Can't be Null.")
     private List<Pizza> pizzaList;
     @NotNull(message = "sideList Can't be Null.")
-    private  List<Side> sideList;
+    private List<Side> sideList;
     @NotNull(message = "drinksList Can't be Null.")
     private List<String> drinksList;
     String deliveryType;

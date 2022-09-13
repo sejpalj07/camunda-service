@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Item implements Serializable {
-    private  String ItemId;
+    private String ItemId;
     private String ItemName;
     private int Price;
     private List<String> Comments;

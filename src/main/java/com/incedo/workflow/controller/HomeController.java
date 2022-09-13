@@ -1,9 +1,6 @@
 package com.incedo.workflow.controller;
 
-import com.incedo.workflow.model.Item;
 import com.incedo.workflow.model.Order;
-import com.incedo.workflow.model.Pizza;
-import com.incedo.workflow.model.Side;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +11,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @RestController
 public class HomeController {
     RuntimeService runtimeService;
     TaskService taskService;
+
     public HomeController(@Autowired RuntimeService runtimeService,
-                          @Autowired TaskService taskService){
+                          @Autowired TaskService taskService) {
         this.runtimeService = runtimeService;
         this.taskService = taskService;
     }
+
     @PostMapping("/process")
-    public ResponseEntity<String> invokeProcess(@Valid @RequestBody Order order){
+    public ResponseEntity<String> invokeProcess(@Valid @RequestBody Order order) {
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("pizzaList", order.getPizzaList());
         orderMap.put("sideList", order.getSideList());
         orderMap.put("drinksList", order.getDrinksList());
-        orderMap.put("paymentType",order.getPaymentType());
-        orderMap.put("deliveryType",order.getDeliveryType());
-        orderMap.put("pickupTime",order.getPickupTime());
-        orderMap.put("address",order.getAddress());
-        orderMap.put("validationMessage",order.getValidationMessage());
-        orderMap.put("customerInfo",order.getCustomerInfo());
+        orderMap.put("paymentType", order.getPaymentType());
+        orderMap.put("deliveryType", order.getDeliveryType());
+        orderMap.put("pickupTime", order.getPickupTime());
+        orderMap.put("address", order.getAddress());
+        orderMap.put("validationMessage", order.getValidationMessage());
+        orderMap.put("customerInfo", order.getCustomerInfo());
         Random random = new Random();
         String bKey = String.valueOf(Math.abs(random.nextInt()));
 
