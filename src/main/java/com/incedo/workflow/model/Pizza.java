@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pizza implements Serializable {
-    private  String pizzaId;
+    private String pizzaId;
     private String pizzaName;
     private List<String> toppings;
 }

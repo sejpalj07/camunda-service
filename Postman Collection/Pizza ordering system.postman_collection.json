@@ -1,37 +1,206 @@
 {
-	"info": {
-		"_postman_id": "c304ce15-9dbf-4270-82c4-19013b52e87c",
-		"name": "Pizza ordering system",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Initiate Order",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"pizzaList\": [\n        {\n            \"pizzaId\": 12,\n            \"pizzaName\": \"Veggie Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        }\n    ],\n    \"sideList\": [\n        {\n            \"sideId\": 12,\n            \"sideName\": \"Garlic Bread\"\n        }\n    ],\n    \"drinksList\": [\n        \"Soda\"\n    ]\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8080/process",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"process"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "061b4feb-5f8b-453f-8cf1-342bafef845c",
+    "name": "Pizza ordering system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "20021500"
+  },
+  "item": [
+    {
+      "name": "Initiate Order online/delivery",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pizzaList\": [\n        {\n            \"pizzaId\": 12,\n            \"pizzaName\": \"Veggie Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        },\n        {\n            \"pizzaId\": 13,\n            \"pizzaName\": \"Cheese Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        }\n    ],\n    \"sideList\": [\n        {\n            \"sideId\": 14,\n            \"sideName\": \"Garlic Bread\"\n        }\n    ],\n    \"drinksList\": [\n        \"Soda\",\n        \"Iced Tea\",\n        \"Water\"\n    ],\n    \"paymentType\": \"online\",\n    \"deliveryType\": \"instore\",\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\n    \"address\": \"1001 Fuller Wiser Rd\",\n    \"validationMessage\": \"\",\n    \"customerInfo\": {\n        \"phonenumber\": \"123456789\"\n    }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cash/delivery order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pizzaList\": [\n        {\n            \"pizzaId\": 12,\n            \"pizzaName\": \"Veggie Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        },\n        {\n            \"pizzaId\": 13,\n            \"pizzaName\": \"Cheese Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        }\n    ],\n    \"sideList\": [\n        {\n            \"sideId\": 14,\n            \"sideName\": \"Garlic Bread\"\n        }\n    ],\n    \"drinksList\": [\n        \"Soda\",\n        \"Iced Tea\",\n        \"Water\"\n    ],\n    \"paymentType\": \"cash\",\n    \"deliveryType\": \"instore\",\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\n    \"address\": \"1001 Fuller Wiser Rd\",\n    \"validationMessage\": \"\",\n    \"customerInfo\": {\n        \"phonenumber\": \"123456789\"\n    }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "test decision output",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"pizzaList\": [\r\n        {\r\n            \"pizzaId\": 12,\r\n            \"pizzaName\": \"Veggie Pizza\",\r\n            \"toppings\": [\r\n                \"greenpapper\",\r\n                \"mushroom\"\r\n            ]\r\n        },\r\n        {\r\n            \"pizzaId\": 13,\r\n            \"pizzaName\": \"Cheese Pizza\",\r\n            \"toppings\": [\r\n                \"greenpapper\",\r\n                \"mushroom\"\r\n            ]\r\n        },\r\n        {\r\n            \"pizzaId\": 15,\r\n            \"pizzaName\": \"Chicken Pizza\",\r\n            \"toppings\": [\r\n                \"greenpapper\",\r\n                \"mushroom\"\r\n            ]\r\n        }\r\n    ],\r\n    \"sideList\": [\r\n        {\r\n            \"sideId\": 13,\r\n            \"sideName\": \"Garlic Bread\"\r\n        },\r\n        {\r\n            \"sideId\": 15,\r\n            \"sideName\": \"Bread\"\r\n        },\r\n        {\r\n            \"sideId\": 15,\r\n            \"sideName\": \"abc\"\r\n        }\r\n    ],\r\n    \"drinksList\": [\r\n        \"Soda\",\r\n        \"Iced Tea\",\r\n        \"Water\",\r\n        \"Fanta\"\r\n    ],\r\n    \"paymentType\": \"online\",\r\n    \"deliveryType\": \"pickup\",\r\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\r\n    \"address\": \"\",\r\n    \"validationMessage\": \"\",\r\n    \"customerInfo\": {\r\n        \"phonenumber\": \"123456789\"\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "testList",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"pizzaList\": [\r\n        {\r\n            \"pizzaId\": 12,\r\n            \"pizzaName\": \"Veggie\",\r\n            \"toppings\": [\r\n                \"greenpapper\",\r\n                \"mushroom\"\r\n            ]\r\n        },\r\n        {\r\n            \"pizzaId\": 13,\r\n            \"pizzaName\": \"Cheese\",\r\n            \"toppings\": [\r\n                \"greenpapper\",\r\n                \"mushroom\"\r\n            ]\r\n        },\r\n        {\r\n            \"pizzaId\": 15,\r\n            \"pizzaName\": \"Chicken\",\r\n            \"toppings\": [\r\n                \"greenpapper\",\r\n                \"mushroom\"\r\n            ]\r\n        }\r\n    ],\r\n    \"sideList\": [\r\n        {\r\n            \"sideId\": 13,\r\n            \"sideName\": \"Garlic\"\r\n        },\r\n        {\r\n            \"sideId\": 15,\r\n            \"sideName\": \"Bread\"\r\n        }\r\n    ],\r\n    \"drinksList\": [\r\n        \"Pepsi\",\r\n        \"Lemoniod\"\r\n    ],\r\n    \"paymentType\": \"online\",\r\n    \"deliveryType\": \"pickup\",\r\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\r\n    \"address\": \"\",\r\n    \"validationMessage\": \"\",\r\n    \"customerInfo\": {\r\n        \"phonenumber\": \"123456789\"\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Initiate Order online/pickup",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pizzaList\": [\n        {\n            \"pizzaId\": 12,\n            \"pizzaName\": \"Veggie Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        },\n        {\n            \"pizzaId\": 13,\n            \"pizzaName\": \"Cheese Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        }\n    ],\n    \"sideList\": [\n        {\n            \"sideId\": 14,\n            \"sideName\": \"Garlic Bread\"\n        }\n    ],\n    \"drinksList\": [\n        \"Soda\",\n        \"Iced Tea\",\n        \"Water\"\n    ],\n    \"paymentType\": \"online\",\n    \"deliveryType\": \"pickup\",\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\n    \"address\": \"1001 Fuller Wiser Rd\",\n    \"validationMessage\": \"validationMessage\",\n    \"customerInfo\": {\n        \"phonenumber\": \"123456789\"\n    }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "online/pickup, no side order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pizzaList\": [\n        {\n            \"pizzaId\": 12,\n            \"pizzaName\": \"Veggie Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        },\n        {\n            \"pizzaId\": 13,\n            \"pizzaName\": \"Cheese Pizza\",\n            \"toppings\": [\n                \"greenpapper\",\n                \"mushroom\"\n            ]\n        }\n    ],\n    \"sideList\": [],\n    \"drinksList\": [\n        \"Soda\",\n        \"Iced Tea\",\n        \"Water\"\n    ],\n    \"paymentType\": \"online\",\n    \"deliveryType\": \"pickup\",\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\n    \"address\": \"1001 Fuller Wiser Rd\",\n    \"validationMessage\": \"validationMessage\",\n    \"customerInfo\": {\n        \"phonenumber\": \"123456789\"\n    }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "online/pickup, no pizza order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pizzaList\": [],\n    \"sideList\": [\n        {\n            \"sideId\": 14,\n            \"sideName\": \"Garlic Bread\"\n        }\n    ],\n    \"drinksList\": [\n        \"Soda\",\n        \"Iced Tea\",\n        \"Water\"\n    ],\n    \"paymentType\": \"online\",\n    \"deliveryType\": \"pickup\",\n    \"pickupTime\":\"2018-03-29T13:34:00.000\",\n    \"address\": \"1001 Fuller Wiser Rd\",\n    \"validationMessage\": \"validationMessage\",\n    \"customerInfo\": {\n        \"phonenumber\": \"123456789\"\n    }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/process",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "process"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
 }

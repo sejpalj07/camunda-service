@@ -1,29 +1,31 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.exception.BPMNErrorList;
 import com.incedo.workflow.model.Side;
+import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Component("ValidateSideDelegate")
 public class ValidateSideDelegate implements JavaDelegate {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private enum SideName {
-        bread("Garlic Bread"),
-        fries("Fries"),
-        wings("Wings");
+        BREAD("Garlic Bread"),
+        FRIES("Fries"),
+        ABC("abc"),
+        WINGS("Wings");
         private final String side;
+
         SideName(final String side) {
             this.side = side;
         }
+
         @Override
         public String toString() {
             return side;
@@ -34,18 +36,23 @@ public class ValidateSideDelegate implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         List<Side> sideList = (List<Side>) execution.getVariable("sideList");
         List<Side> newSideList = new ArrayList<>();
-        logger.info("Before removal:" + sideList);
+        log.info("Before removal:" + sideList);
         for (Side side : sideList) {
             String name = side.getSideName();
             boolean isValidSideOrder = Arrays.stream(ValidateSideDelegate.SideName.values())
                     .anyMatch((t) -> t.side.equals(name));
-            if(isValidSideOrder){
+            if (isValidSideOrder) {
                 newSideList.add(side);
-               //delete side
-               // sideList.remove(side);
-//                logger.info("After removal:" + sideList);
+            } else {
+                log.error(BPMNErrorList.ERROR_ITEM_INVALID + ": InValid Side Item: " + side + "\n with Business Key: " + execution.getProcessBusinessKey());
+//                throw new ListEmptyException(BPMNErrorList.ERROR_ITEM_INVALID, "InValid Side Item" + side + " with Business Key: " + execution.getProcessBusinessKey());
             }
         }
-        execution.setVariable("sideList", newSideList);
+        if (newSideList.isEmpty()) {
+            log.error(BPMNErrorList.ERROR_EMPTY_LIST + ": sideList is Empty, with Business key: " + execution.getProcessBusinessKey());
+//            throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "sideList is Empty, with Business key: " + execution.getProcessBusinessKey());
+        } else {
+            execution.setVariable("sideList", newSideList);
+        }
     }
 }
