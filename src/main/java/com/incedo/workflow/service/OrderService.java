@@ -11,13 +11,16 @@ public class OrderService {
 
     public Map<String, Object> getOrder(Order order) {
 
-
-        List<Item> ItemList = new ArrayList<>();
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("pizzaList", order.getPizzaList());
         orderMap.put("sideList", order.getSideList());
         orderMap.put("drinksList", order.getDrinksList());
-        orderMap.put("ItemList", ItemList);
+         orderMap.put("paymentType", order.getPaymentType());
+        orderMap.put("deliveryType", order.getDeliveryType());
+        orderMap.put("pickupTime", order.getPickupTime());
+        orderMap.put("address", order.getAddress());
+        orderMap.put("validationMessage", order.getValidationMessage());
+        orderMap.put("customerInfo", order.getCustomerInfo());
          return orderMap;
     }
 
