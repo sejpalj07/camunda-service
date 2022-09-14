@@ -1,0 +1,36 @@
+{
+  "pizzaList": [
+    {
+      "pizzaId": 12,
+      "pizzaName": "Veggie Pizza",
+      "toppings": [
+        "greenpapper",
+        "mushroom"
+      ]
+    },
+    {
+      "pizzaId": 13,
+      "pizzaName": "Cheese Pizza",
+      "toppings": [
+        "greenpapper",
+        "mushroom"
+      ]
+    },
+    {
+      "pizzaId": 15,
+      "pizzaName": "Pizza",
+      "toppings": [
+        "greenpapper",
+        "mushroom"
+      ]
+    }
+  ],
+  "sideList": [
+
+  ],
+  "drinksList": [
+    "Soda",
+    "Iced Tea",
+    "abc"
+  ]
+}
