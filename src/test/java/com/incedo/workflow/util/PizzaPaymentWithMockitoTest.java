@@ -4,7 +4,6 @@ package com.incedo.workflow.util;
 import com.incedo.workflow.model.*;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.mock.Mocks;
-import org.camunda.bpm.extension.mockito.ProcessExpressions;
 import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRule;
 import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder;
 import org.camunda.bpm.scenario.ProcessScenario;
@@ -23,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.withVariables;
 import static org.mockito.Mockito.*;
 
 /*
@@ -51,7 +49,7 @@ public class PizzaPaymentWithMockitoTest {
             .excludeProcessDefinitionKeys(SidePriceCalculatorDecision)
             .excludeProcessDefinitionKeys(DrinksPriceCalculatorDecision)
             .excludeProcessDefinitionKeys(priceCalculator)
-            .assertClassCoverageAtLeast(0.384)
+            .assertClassCoverageAtLeast(0.252)
             .build();
 
     @Mock
@@ -67,29 +65,12 @@ public class PizzaPaymentWithMockitoTest {
         Mocks.register("ValidatePizzaDelegate", new ValidatePizzaDelegate());
         Mocks.register("ValidateSideDelegate", new ValidateSideDelegate());
         Mocks.register("ValidateDrinksDelegate", new ValidateDrinksDelegate());
-//        Mocks.register("AddDrinksPrice", new AddDrinksPrice());
-//        Mocks.register("AddSidePrice", new AddSidePrice());
-//        Mocks.register("AddPizzaPrice", new AddPizzaPrice());
         sidePrepareOrder = Mockito.mock(SidePrepareOrder.class);
         Mocks.register("SidePrepareOrder", sidePrepareOrder);
         pizzaPrepareOrder = Mockito.mock(PizzaPrepareOrder.class);
         Mocks.register("PizzaPrepareOrder", pizzaPrepareOrder);
+        Mocks.register("CheckPizzaStatusFromKitchen", Mockito.mock(CheckPizzaStatusFromKitchen.class));
 
-        ProcessExpressions.registerCallActivityMock(PizzaPriceCalculatorDecision)
-                .deploy(rule);
-        ProcessExpressions.registerCallActivityMock(SidePriceCalculatorDecision)
-                .deploy(rule);
-        ProcessExpressions.registerCallActivityMock(DrinksPriceCalculatorDecision)
-                .deploy(rule);
-        ProcessExpressions.registerCallActivityMock(priceCalculator)
-                .deploy(rule);
-
-
-        //Happy-Path
-        when(pizzaOrderingSystem.waitsAtUserTask(TASK_DELIVER_ORDER))
-                .thenReturn(task -> {
-                    task.complete(withVariables(VAR_ORDER_DELIVERED, true));
-                });
     }
 
     @Test
@@ -97,14 +78,6 @@ public class PizzaPaymentWithMockitoTest {
         String bKey = "bKey";
         Map<String, Object> variables = foodOrder();
 
-        ProcessExpressions.registerCallActivityMock(PizzaPriceCalculatorDecision)
-                .deploy(rule);
-        ProcessExpressions.registerCallActivityMock(SidePriceCalculatorDecision)
-                .deploy(rule);
-        ProcessExpressions.registerCallActivityMock(DrinksPriceCalculatorDecision)
-                .deploy(rule);
-        ProcessExpressions.registerCallActivityMock(priceCalculator)
-                .deploy(rule);
 
         doNothing().when(sidePrepareOrder).execute(any());
         when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0xa3wii"))
@@ -117,11 +90,9 @@ public class PizzaPaymentWithMockitoTest {
                 .startByMessage("orderMessage", variables)
                 .execute();
 
-//        verify(pizzaOrderingSystem).hasCompleted("side-validation");
-//        verify(pizzaOrderingSystem).hasCompleted("Activity_0golmdj");
-//        verify(pizzaOrderingSystem).hasCompleted("pizza-validation");
-//        verify(pizzaOrderingSystem).waitsAtMessageIntermediateCatchEvent("Event_0xa3wii");
-//        verify(pizzaOrderingSystem).waitsAtMessageIntermediateCatchEvent("Event_0hqdn4x");
+        verify(pizzaOrderingSystem).hasCompleted("side-validation");
+        verify(pizzaOrderingSystem).hasCompleted("Activity_0golmdj");
+        verify(pizzaOrderingSystem).hasCompleted("pizza-validation");
     }
 
     public Map<String, Object> foodOrder() {
