@@ -2,6 +2,7 @@ package com.incedo.workflow.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.util.Date;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ public class Order implements Serializable {
     @NotNull(message = "drinksList Can't be Null.")
     private List<String> drinksList;
     String deliveryType;
-    String pickupTime;
+    Date pickupTime;
     String address;
     String validationMessage;
     String paymentType;
