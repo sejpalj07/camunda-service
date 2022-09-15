@@ -17,8 +17,9 @@ import java.util.Random;
 
 @RestController
 public class HomeController {
-    RuntimeService runtimeService;
-    TaskService taskService;
+    private RuntimeService runtimeService;
+    private TaskService taskService;
+    private Random random = new Random();
 
     public HomeController(@Autowired RuntimeService runtimeService,
                           @Autowired TaskService taskService) {
@@ -38,7 +39,6 @@ public class HomeController {
         orderMap.put("address", order.getAddress());
         orderMap.put("validationMessage", order.getValidationMessage());
         orderMap.put("customerInfo", order.getCustomerInfo());
-        Random random = new Random();
         String bKey = String.valueOf(Math.abs(random.nextInt()));
 
         this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);

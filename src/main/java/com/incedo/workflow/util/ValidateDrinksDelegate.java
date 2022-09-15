@@ -1,6 +1,8 @@
 package com.incedo.workflow.util;
 
 import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.InvalidItemException;
+import com.incedo.workflow.exception.ListEmptyException;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -42,12 +44,12 @@ public class ValidateDrinksDelegate implements JavaDelegate {
                 newDrinksList.add(eachDrink);
             } else {
                 log.error(BPMNErrorList.ERROR_ITEM_INVALID + ": InValid Drinks Item: " + eachDrink + "\n with Business Key: " + execution.getProcessBusinessKey());
-//                throw new ListEmptyException(BPMNErrorList.ERROR_ITEM_INVALID, "InValid Drinks Item" + eachDrink + " with Business Key: " + execution.getProcessBusinessKey());
+                throw new InvalidItemException(BPMNErrorList.ERROR_ITEM_INVALID, "InValid Drinks Item" + eachDrink + " with Business Key: " + execution.getProcessBusinessKey());
             }
         }
         if (newDrinksList.isEmpty()) {
             log.error(BPMNErrorList.ERROR_EMPTY_LIST + ": drinksList is Empty, with Business key: " + execution.getProcessBusinessKey());
-//            throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "drinksList is Empty, with Business key: " + execution.getProcessBusinessKey());
+            throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "drinksList is Empty, with Business key: " + execution.getProcessBusinessKey());
         } else {
             execution.setVariable("drinksList", newDrinksList);
         }
