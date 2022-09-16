@@ -1,11 +1,15 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.MessageCorrelationException;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.bpm.engine.runtime.EventSubscription;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -20,12 +24,25 @@ public class UpdatePaymentStatus implements JavaDelegate {
         log.info(">>>>>>>>>>>>>>>>>>" + execution.getProcessInstance().getProcessBusinessKey());
         Map<String, Object> variables = new HashMap<>();
         variables.put("sufficientBalance", sufficientBalance);
-        execution.getProcessEngineServices()
+
+        List<EventSubscription> eventSubscriptions = execution.getProcessEngineServices()
                 .getRuntimeService()
-                .createMessageCorrelation("paymentcompletionmessage")
-                .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
-                .setVariables(variables)
-                .correlate();
-        log.info("payment completion Message sent");
+                .createEventSubscriptionQuery()
+                .eventName("paymentcompletionmessage")
+                .eventType("message").list();
+
+        if (eventSubscriptions.isEmpty()) {
+            log.error("Payment System couldn't correlate the message.");
+//            throw new MessageCorrelationException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE, "Back house process isn't ready to receive the message. ");
+        } else {
+            execution.getProcessEngineServices()
+                    .getRuntimeService()
+                    .createMessageCorrelation("paymentcompletionmessage")
+                    .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
+                    .setVariables(variables)
+                    .correlate();
+            log.info("payment completion Message sent");
+        }
+
     }
 }

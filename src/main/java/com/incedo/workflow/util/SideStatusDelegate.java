@@ -1,5 +1,7 @@
 package com.incedo.workflow.util;
 
+import com.incedo.workflow.exception.BPMNErrorList;
+import com.incedo.workflow.exception.MessageCorrelationException;
 import com.incedo.workflow.model.Side;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.BpmnError;
@@ -34,8 +36,8 @@ public class SideStatusDelegate implements JavaDelegate {
                 .eventType("message").list();
 
         if (eventSubscriptions.isEmpty()) {
-            log.error("No Process is ready to receive the message. ");
-            throw new BpmnError("Error_B000", "failed.");
+            log.error("Message correlation failed from back house. No Process is ready to receive the message. ");
+            throw new MessageCorrelationException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE_FROM_BACK_HOUSE, "Message correlation failed from back house. No Process is ready to receive the message.");
         } else {
             log.info("event id : " + eventSubscriptions.get(0));
             execution.getProcessEngineServices()

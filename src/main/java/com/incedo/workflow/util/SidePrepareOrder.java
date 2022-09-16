@@ -1,7 +1,7 @@
 package com.incedo.workflow.util;
 
 import com.incedo.workflow.exception.BPMNErrorList;
-import com.incedo.workflow.exception.ListEmptyException;
+import com.incedo.workflow.exception.MessageCorrelationException;
 import com.incedo.workflow.model.Side;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -32,7 +32,7 @@ public class SidePrepareOrder implements JavaDelegate {
         if (eventSubscriptions.isEmpty()) {
             log.error("No Process is ready to receive the message. ");
 //            log.error(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE + msg + "with Business key: " + execution.getProcessBusinessKey());
-            throw new ListEmptyException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE, "No Process is ready to receive the message. ");
+            throw new MessageCorrelationException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE, "No Process is ready to receive the message. ");
         } else {
             execution.getProcessEngineServices()
                     .getRuntimeService()
