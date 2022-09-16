@@ -24,10 +24,5 @@ public class OrderService {
          return orderMap;
     }
 
-    public String getKey() {
-        Random random = new Random();
-        String bKey = String.valueOf(Math.abs(random.nextInt()));
-         return bKey;
-    }
 
 }

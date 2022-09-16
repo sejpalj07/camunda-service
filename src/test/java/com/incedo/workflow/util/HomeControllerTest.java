@@ -62,6 +62,17 @@ public class HomeControllerTest {
         Assertions.assertThat(response.getContentAsString().equals("Pizza Processing BPM is Running."));
          System.out.println("Response+======================"+response.getContentAsString());
     }
+    @Test
+    public void testInvokeProcessInvalidScenario() throws Exception {
+        String orderJson = getJsonFromFile("invalidOrder.json");
+        MvcResult result = mockMvc.perform(post("/process")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderJson)).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+        Assertions.assertThat(HttpStatus.OK.value() == response.getStatus());
+        Assertions.assertThat(response.getContentAsString().equals("Pizza Processing BPM is Running.invalid "));
+        System.out.println("Response+======================"+response.getContentAsString());
+    }
 
     private String getJsonFromFile(String fileName) {
         String jsonText = "";

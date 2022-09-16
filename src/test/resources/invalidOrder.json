@@ -2,7 +2,7 @@
   "pizzaList": [
     {
       "pizzaId": 12,
-      "pizzaName": "Veggie Pizza",
+      "pizzaName": "",
       "toppings": [
         "greenpapper",
         "mushroom"

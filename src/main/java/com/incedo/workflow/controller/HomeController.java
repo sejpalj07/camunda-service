@@ -12,12 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Random;
 
 @RestController
 public class HomeController {
-    RuntimeService runtimeService;
-    TaskService taskService;
-    OrderService orderService;
+    private RuntimeService runtimeService;
+    private TaskService taskService;
+    private OrderService orderService;
+
+    public String getKey() {
+        Random random = new Random();
+        String bKey = String.valueOf(Math.abs(random.nextInt()));
+        return bKey;
+    }
     public HomeController(@Autowired RuntimeService runtimeService,
                           @Autowired TaskService taskService,
                           @Autowired OrderService orderService){
@@ -29,9 +36,8 @@ public class HomeController {
 
     @PostMapping("/process")
     public ResponseEntity<String> invokeProcess(@RequestBody @Valid Order order){
-        this.runtimeService.correlateMessage("orderMessage", orderService.getKey(),
+        this.runtimeService.correlateMessage("orderMessage", getKey() ,
                 orderService.getOrder(order));
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }
-
 }
