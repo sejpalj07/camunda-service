@@ -51,12 +51,10 @@ public class PizzaPaymentWithMockitoTest {
             .excludeProcessDefinitionKeys(priceCalculator)
             .assertClassCoverageAtLeast(0.252)
             .build();
-
-    @Mock
-    private ProcessScenario pizzaOrderingSystem;
-
     SidePrepareOrder sidePrepareOrder;
     PizzaPrepareOrder pizzaPrepareOrder;
+    @Mock
+    private ProcessScenario pizzaOrderingSystem;
 
     @Before
     public void defaultScenario() {

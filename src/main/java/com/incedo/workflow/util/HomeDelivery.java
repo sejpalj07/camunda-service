@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("HomeDelivery")
 public class HomeDelivery implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered HomeDelivery");
@@ -24,5 +23,4 @@ public class HomeDelivery implements JavaDelegate {
             throw new BpmnError("1001"); // ValidationError
         }
     }
-
 }

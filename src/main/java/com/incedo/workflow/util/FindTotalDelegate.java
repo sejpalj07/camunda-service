@@ -11,7 +11,6 @@ import java.util.List;
 @Slf4j
 @Component("FindTotalDelegate")
 public class FindTotalDelegate implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         List<Item> itemList = (List<Item>) execution.getVariable("itemList");

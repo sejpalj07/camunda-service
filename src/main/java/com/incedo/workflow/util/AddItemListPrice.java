@@ -14,11 +14,8 @@ import java.util.List;
 @Slf4j
 @Component("AddItemListPrice")
 public class AddItemListPrice implements JavaDelegate {
-
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-
         try {
             int itemPrice = (int) execution.getVariable("itemPrice");
             Item eachItem = (Item) execution.getVariable("eachItemOrder");
@@ -32,9 +29,7 @@ public class AddItemListPrice implements JavaDelegate {
             execution.setVariable("itemList", itemList);
         } catch (Exception ex) {
             log.error("Price not Found.");
-            throw  new PriceNotFound(BPMNErrorList.ERROR_PRICE_NOT_FOUND, "Price not found in dmn table.");
+            throw new PriceNotFound(BPMNErrorList.ERROR_PRICE_NOT_FOUND, "Price not found in dmn table.");
         }
-
-
     }
 }

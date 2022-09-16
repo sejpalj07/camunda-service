@@ -16,24 +16,6 @@ import java.util.List;
 @Slf4j
 @Component("ValidateSideDelegate")
 public class ValidateSideDelegate implements JavaDelegate {
-
-    private enum SideName {
-        BREAD("Garlic Bread"),
-        FRIES("Fries"),
-        TEST("test"),
-        WINGS("Wings");
-        private final String side;
-
-        SideName(final String side) {
-            this.side = side;
-        }
-
-        @Override
-        public String toString() {
-            return side;
-        }
-    }
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         List<Side> sideList = (List<Side>) execution.getVariable("sideList");
@@ -55,6 +37,23 @@ public class ValidateSideDelegate implements JavaDelegate {
             throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "sideList is Empty, with Business key: " + execution.getProcessBusinessKey());
         } else {
             execution.setVariable("sideList", newSideList);
+        }
+    }
+
+    private enum SideName {
+        BREAD("Garlic Bread"),
+        FRIES("Fries"),
+        TEST("test"),
+        WINGS("Wings");
+        private final String side;
+
+        SideName(final String side) {
+            this.side = side;
+        }
+
+        @Override
+        public String toString() {
+            return side;
         }
     }
 }

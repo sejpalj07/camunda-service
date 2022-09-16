@@ -8,10 +8,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("CreditDelegate")
 public class CreditDelegate implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered CreditDelegate");
     }
-
 }

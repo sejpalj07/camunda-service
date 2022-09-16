@@ -31,7 +31,6 @@ public class PizzaPrepareOrder implements JavaDelegate {
 
         if (eventSubscriptions.isEmpty()) {
             log.error("Back house Process isn't ready to receive the message. ");
-//            log.error(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE + msg + "with Business key: " + execution.getProcessBusinessKey());
             throw new MessageCorrelationException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE, "Back house process isn't ready to receive the message. ");
         } else {
             execution.getProcessEngineServices()

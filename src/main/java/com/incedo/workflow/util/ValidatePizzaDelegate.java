@@ -16,23 +16,6 @@ import java.util.List;
 @Slf4j
 @Component("ValidatePizzaDelegate")
 public class ValidatePizzaDelegate implements JavaDelegate {
-    private enum PizzaName {
-        VEGGIE("Veggie Pizza"),
-        CHEESE("Cheese Pizza"),
-        MEAT("Meat Pizza"),
-        CHICKEN("Chicken Pizza");
-        private final String pizza;
-
-        PizzaName(final String pizza) {
-            this.pizza = pizza;
-        }
-
-        @Override
-        public String toString() {
-            return pizza;
-        }
-    }
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info(">>>>>>>>>>>>>>>>>>" + execution.getProcessInstance().getProcessBusinessKey());
@@ -57,5 +40,22 @@ public class ValidatePizzaDelegate implements JavaDelegate {
             execution.setVariable("pizzaList", newPizzaList);
         }
         log.info("end validate pizza");
+    }
+
+    private enum PizzaName {
+        VEGGIE("Veggie Pizza"),
+        CHEESE("Cheese Pizza"),
+        MEAT("Meat Pizza"),
+        CHICKEN("Chicken Pizza");
+        private final String pizza;
+
+        PizzaName(final String pizza) {
+            this.pizza = pizza;
+        }
+
+        @Override
+        public String toString() {
+            return pizza;
+        }
     }
 }

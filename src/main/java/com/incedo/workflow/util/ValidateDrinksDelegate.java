@@ -15,24 +15,6 @@ import java.util.List;
 @Slf4j
 @Component("ValidateDrinksDelegate")
 public class ValidateDrinksDelegate implements JavaDelegate {
-
-    private enum DrinksName {
-        SODA("Soda"),
-        TEA("Iced Tea"),
-        FANTA("Fanta"),
-        WATER("Water");
-        private final String drink;
-
-        DrinksName(final String drink) {
-            this.drink = drink;
-        }
-
-        @Override
-        public String toString() {
-            return drink;
-        }
-    }
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         List<String> drinksList = (List<String>) execution.getVariable("drinksList");
@@ -52,6 +34,23 @@ public class ValidateDrinksDelegate implements JavaDelegate {
             throw new ListEmptyException(BPMNErrorList.ERROR_EMPTY_LIST, "drinksList is Empty, with Business key: " + execution.getProcessBusinessKey());
         } else {
             execution.setVariable("drinksList", newDrinksList);
+        }
+    }
+
+    private enum DrinksName {
+        SODA("Soda"),
+        TEA("Iced Tea"),
+        FANTA("Fanta"),
+        WATER("Water");
+        private final String drink;
+
+        DrinksName(final String drink) {
+            this.drink = drink;
+        }
+
+        @Override
+        public String toString() {
+            return drink;
         }
     }
 }

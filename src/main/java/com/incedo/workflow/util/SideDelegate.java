@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("SideDelegate")
 public class SideDelegate implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         Side side = (Side) execution.getVariable("side");

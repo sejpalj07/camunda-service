@@ -4,11 +4,9 @@ import com.incedo.workflow.exception.BPMNErrorList;
 import com.incedo.workflow.exception.MessageCorrelationException;
 import com.incedo.workflow.model.Side;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.runtime.EventSubscription;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -19,7 +17,6 @@ import java.util.Map;
 @Slf4j
 @Component("SideStatusDelegate")
 public class SideStatusDelegate implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         Side side = (Side) execution.getVariable("side");

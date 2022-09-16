@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("EnrichCustomer")
 public class EnrichCustomer implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered EnrichCustomer");
@@ -20,5 +19,4 @@ public class EnrichCustomer implements JavaDelegate {
         customerInfo.setAlternatePhoneNumber("9876543210");
         execution.setVariable("order", customerInfo);
     }
-
 }

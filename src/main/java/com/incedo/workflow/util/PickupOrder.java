@@ -11,7 +11,6 @@ import java.util.Date;
 @Slf4j
 @Component("PickupOrder")
 public class PickupOrder implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered PickupOrder");
@@ -26,5 +25,4 @@ public class PickupOrder implements JavaDelegate {
             throw new BpmnError("1001"); // ValidationError
         }
     }
-
 }

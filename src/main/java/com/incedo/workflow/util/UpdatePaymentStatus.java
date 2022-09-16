@@ -1,7 +1,5 @@
 package com.incedo.workflow.util;
 
-import com.incedo.workflow.exception.BPMNErrorList;
-import com.incedo.workflow.exception.MessageCorrelationException;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -15,7 +13,6 @@ import java.util.Map;
 @Slf4j
 @Component("UpdatePaymentStatus")
 public class UpdatePaymentStatus implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered UpdatePaymentStatus");
@@ -33,7 +30,6 @@ public class UpdatePaymentStatus implements JavaDelegate {
 
         if (eventSubscriptions.isEmpty()) {
             log.error("Payment System couldn't correlate the message.");
-//            throw new MessageCorrelationException(BPMNErrorList.ERROR_MESSAGE_NOT_CORRELATE, "Back house process isn't ready to receive the message. ");
         } else {
             execution.getProcessEngineServices()
                     .getRuntimeService()
@@ -43,6 +39,5 @@ public class UpdatePaymentStatus implements JavaDelegate {
                     .correlate();
             log.info("payment completion Message sent");
         }
-
     }
 }
