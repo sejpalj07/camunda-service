@@ -11,20 +11,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class HomeControllerTest {
 
 
@@ -51,7 +53,7 @@ public class HomeControllerTest {
 
     @Test
     public void testInvokeProcess() throws Exception {
-        String orderJson = getJsonFromFile("C:\\git\\camunda-service\\src\\test\\java\\order.json");
+        String orderJson = getJsonFromFile("order.json");
         MvcResult result = mockMvc.perform(post("/process")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderJson)).andReturn();
@@ -64,7 +66,9 @@ public class HomeControllerTest {
     private String getJsonFromFile(String fileName) {
         String jsonText = "";
            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+               ClassLoader classLoader = getClass().getClassLoader();
+               File file = new File(classLoader.getResource(fileName).getFile());
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = bufferedReader.readLine())  != null) {
                     jsonText += line + "\n";
