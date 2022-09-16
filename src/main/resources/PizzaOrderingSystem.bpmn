@@ -414,7 +414,7 @@
   <bpmn:error id="Error_0ynf3mt" name="Error_6005" errorCode="Error_6005" />
   <bpmn:escalation id="Escalation_38jmih0" name="Escalation_Invalid_Item" escalationCode="Escalation_Invalid_Item" />
   <bpmn:escalation id="Escalation_1sbf3fr" name="Escalation_No_Price" escalationCode="Escalation_No_Price" />
-  <bpmn:error id="Error_1hi9rw5" name="Error_6004" errorCode="Error_6004" />
+  <bpmn:error id="Error_1hi9rw5" name="Error_6003" errorCode="Error_6003" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PizzaOrderingSystem">
       <bpmndi:BPMNEdge id="Flow_12tar1g_di" bpmnElement="Flow_12tar1g">

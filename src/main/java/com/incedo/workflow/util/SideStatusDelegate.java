@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.bpm.engine.runtime.EventSubscription;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.springframework.stereotype.Component;
 
@@ -20,27 +21,31 @@ public class SideStatusDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         Side side = (Side) execution.getVariable("side");
+        String bKey = execution.getProcessInstance().getProcessBusinessKey();
         Map<String, Object> sideStatus = new HashMap<>();
         sideStatus.put("completedSide", side);
+        Map<String, Object> correlationKeys = new HashMap<>();
+        correlationKeys.put(bKey, bKey);
 
-//        SubscriptionQuery subscriptionQuery = runtimeService.createEventSubscriptionQuery()
-//                .eventName("my_message")
-//                .eventType("message");
-//        List<EventSubscription> eventSubscriptions = subscriptionQuery.list();
+        List<EventSubscription> eventSubscriptions = execution.getProcessEngineServices()
+                .getRuntimeService()
+                .createEventSubscriptionQuery()
+                .eventName("SideStatusMessage")
+                .eventType("message").list();
 
-        try{
+        if (eventSubscriptions.isEmpty()) {
+            log.error("No Process is ready to receive the message. ");
+            throw new BpmnError("Error_B000", "failed.");
+        } else {
+            log.info("event id : " + eventSubscriptions.get(0));
             execution.getProcessEngineServices()
                     .getRuntimeService()
+//                    .correlateMessage("SideStatusMessage", bKey, correlationKeys, sideStatus);
                     .createMessageCorrelation("SideStatusMessage")
-                    .processInstanceBusinessKey(execution.getProcessInstance().getProcessBusinessKey())
+                    .processInstanceBusinessKey(bKey)
                     .setVariables(sideStatus)
                     .correlate();
             log.info("Side Status Message sent");
-        } catch (Exception ex){
-            log.error("MismatchingMessageCorrelationException:  Cannot correlate message 'SideStatusMessage': No process definition or execution matches the parameters");
-            throw new BpmnError("Error_B000", "failed.");
         }
-
-
     }
 }
