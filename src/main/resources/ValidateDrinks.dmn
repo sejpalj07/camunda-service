@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" id="Definitions_1rwv1y3" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
+  <decision id="ValidateDrinks" name="ValidateDrinks">
+    <decisionTable id="decisionTable_1" hitPolicy="FIRST">
+      <input id="input_1" label="drinksListStr">
+        <inputExpression id="inputExpression_1" typeRef="string" expressionLanguage="groovy">
+          <text>drinksListStr.toString().replaceAll("\\s", "")</text>
+        </inputExpression>
+      </input>
+      <output id="output_1" label="isValid" name="isValid" typeRef="boolean" />
+      <rule id="DecisionRule_018zbae">
+        <inputEntry id="UnaryTests_1iknclf">
+          <text>"Soda"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0k9a67z">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0teu9p8">
+        <inputEntry id="UnaryTests_14wm56r">
+          <text>"IcedTea"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0s37l4l">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1jqvulg">
+        <inputEntry id="UnaryTests_1mpewe2">
+          <text>"Water"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0fxw2zl">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_117r8uk">
+        <inputEntry id="UnaryTests_0v84u04">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_045gdru">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

@@ -16,12 +16,11 @@ public class HomeDelivery implements JavaDelegate {
         execution.setVariable("validationError", false);
         String address = (String) execution.getVariable("address");
         String validationMessage = (String) execution.getVariable("validationMessage");
-
         if (address == null || address.trim().isEmpty()) {
             execution.setVariable("validationError", true);
             validationMessage = validationMessage + "address is required for delivery order";
             execution.setVariable("validationMessage", validationMessage);
-            throw new BpmnError("1001"); // ValidationError
+            throw new BpmnError("1001");
         }
     }
 

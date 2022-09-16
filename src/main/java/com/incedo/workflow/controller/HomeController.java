@@ -17,9 +17,9 @@ import java.util.Random;
 
 @RestController
 public class HomeController {
-    private RuntimeService runtimeService;
-    private TaskService taskService;
-    private Random random = new Random();
+    private final RuntimeService runtimeService;
+    private final TaskService taskService;
+    private final Random random = new Random();
 
     public HomeController(@Autowired RuntimeService runtimeService,
                           @Autowired TaskService taskService) {
@@ -40,11 +40,7 @@ public class HomeController {
         orderMap.put("validationMessage", order.getValidationMessage());
         orderMap.put("customerInfo", order.getCustomerInfo());
         String bKey = String.valueOf(Math.abs(random.nextInt()));
-
         this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);
-
-        //runtimeService.
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }
-
 }
