@@ -1,0 +1,44 @@
+{
+	"info": {
+		"_postman_id": "2078c4ef-4aee-4b34-9c1e-1dc61f840255",
+		"name": "CamundaRestApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetJobListWithProcessInstanceId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/engine-rest/history/activity-instance?processInstanceId=ef4879b9-35f4-11ed-9d7b-4e445b935c5b&sortBy=startTime&sortOrder=asc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"engine-rest",
+						"history",
+						"activity-instance"
+					],
+					"query": [
+						{
+							"key": "processInstanceId",
+							"value": "ef4879b9-35f4-11ed-9d7b-4e445b935c5b"
+						},
+						{
+							"key": "sortBy",
+							"value": "startTime"
+						},
+						{
+							"key": "sortOrder",
+							"value": "asc"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
