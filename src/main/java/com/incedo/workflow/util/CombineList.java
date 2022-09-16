@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component("CombineList")
 public class CombineList implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         List<Item> itemList = new ArrayList<>();

@@ -5,11 +5,23 @@
       <bpmn:outgoing>Flow_0xln4hv</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1usqn5a" messageRef="Message_1m51tbu" />
     </bpmn:startEvent>
+<<<<<<< HEAD
     <bpmn:sequenceFlow id="Flow_19yh0vy" sourceRef="InclusiveGateway_BeforeValidation" targetRef="JD_side-validation">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sideList.size() &gt; 0}</bpmn:conditionExpression>
+=======
+    <bpmn:sequenceFlow id="Flow_19yh0vy" sourceRef="Gateway_0knz79p" targetRef="side-validation">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sideList.size() &gt; 0}
+            </bpmn:conditionExpression>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
     </bpmn:sequenceFlow>
+<<<<<<< HEAD
     <bpmn:sequenceFlow id="Flow_0ijnqt2" sourceRef="InclusiveGateway_BeforeValidation" targetRef="MultiInstance_Drinks">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${drinksList.size() &gt; 0}</bpmn:conditionExpression>
+=======
+    <bpmn:sequenceFlow id="Flow_0ijnqt2" sourceRef="Gateway_0knz79p" targetRef="Activity_0golmdj">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${drinksList.size() &gt; 0}
+            </bpmn:conditionExpression>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
     </bpmn:sequenceFlow>
     <bpmn:inclusiveGateway id="InclusiveGateway_BeforeValidation">
       <bpmn:incoming>Flow_0tmjk63</bpmn:incoming>
@@ -69,11 +81,23 @@
         <bpmn:incoming>Flow_0n51lrs</bpmn:incoming>
         <bpmn:outgoing>Flow_1m6b4af</bpmn:outgoing>
       </bpmn:serviceTask>
+<<<<<<< HEAD
       <bpmn:sequenceFlow id="Flow_09er445" sourceRef="SubProcess_DeliveryType_Gateway" targetRef="SubProcess_Delivery_Pickup">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${deliveryType == "pickup"}</bpmn:conditionExpression>
+=======
+      <bpmn:sequenceFlow id="Flow_09er445" sourceRef="Gateway_0y0d2yq" targetRef="pickuporder">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${deliveryType == "pickup"}
+                </bpmn:conditionExpression>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
       </bpmn:sequenceFlow>
+<<<<<<< HEAD
       <bpmn:sequenceFlow id="Flow_1eun8aj" sourceRef="SubProcess_DeliveryType_Gateway" targetRef="SubProcess_Delivery_Delivery">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${deliveryType == "instore"}</bpmn:conditionExpression>
+=======
+      <bpmn:sequenceFlow id="Flow_1eun8aj" sourceRef="Gateway_0y0d2yq" targetRef="deliveryorder">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${deliveryType == "instore"}
+                </bpmn:conditionExpression>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1sjks93" sourceRef="SubProcess_Delivery_Pickup" targetRef="SubProcess_DeliveryType_Gateway_Merge" />
       <bpmn:sequenceFlow id="Flow_1hi4gdz" sourceRef="SubProcess_Delivery_Delivery" targetRef="SubProcess_DeliveryType_Gateway_Merge" />
@@ -117,7 +141,10 @@
       <bpmn:incoming>Flow_0da122v</bpmn:incoming>
       <bpmn:linkEventDefinition id="LinkEventDefinition_0cxgvg8" name="DeliverySystem" />
     </bpmn:intermediateThrowEvent>
+<<<<<<< HEAD
     <bpmn:sequenceFlow id="Flow_14fc9jd" sourceRef="ParallelGateway_ToSignalAndValidation" targetRef="customerenrichsignalthrow" />
+=======
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
     <bpmn:intermediateCatchEvent id="customerenrichsignalcatch" name="customer enrich signal catch">
       <bpmn:outgoing>Flow_13cjbas</bpmn:outgoing>
       <bpmn:signalEventDefinition id="SignalEventDefinition_0t91oyj" signalRef="Signal_2fhgs7i" />
@@ -150,11 +177,26 @@
       <bpmn:outgoing>Flow_1yftprq</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:intermediateThrowEvent id="customerenrichsignalthrow" name="customer enrich signal throw" camunda:asyncAfter="true">
+<<<<<<< HEAD
       <bpmn:incoming>Flow_14fc9jd</bpmn:incoming>
+=======
+      <bpmn:incoming>Flow_1b9g2wu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1arl8n2</bpmn:outgoing>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
       <bpmn:signalEventDefinition id="SignalEventDefinition_0g07dzv" signalRef="Signal_2fhgs7i" />
     </bpmn:intermediateThrowEvent>
+<<<<<<< HEAD
     <bpmn:sequenceFlow id="Flow_0st7e5c" sourceRef="InclusiveGateway_BeforeValidation" targetRef="JD_pizza-validation">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pizzaList.size() &gt; 0}</bpmn:conditionExpression>
+=======
+    <bpmn:sequenceFlow id="Flow_1arl8n2" sourceRef="customerenrichsignalthrow" targetRef="Event_1kzm55s" />
+    <bpmn:endEvent id="Event_1kzm55s">
+      <bpmn:incoming>Flow_1arl8n2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0st7e5c" sourceRef="Gateway_0knz79p" targetRef="pizza-validation">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pizzaList.size() &gt; 0}
+            </bpmn:conditionExpression>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="JD_pizza-validation" name="Pizza Validation" camunda:asyncBefore="true" camunda:delegateExpression="${ValidatePizzaDelegate}">
       <bpmn:incoming>Flow_0st7e5c</bpmn:incoming>
@@ -222,7 +264,11 @@
     <bpmn:parallelGateway id="ParallelGateway_ToSignalAndValidation">
       <bpmn:incoming>Flow_0xln4hv</bpmn:incoming>
       <bpmn:outgoing>Flow_0tmjk63</bpmn:outgoing>
+<<<<<<< HEAD
       <bpmn:outgoing>Flow_14fc9jd</bpmn:outgoing>
+=======
+      <bpmn:outgoing>Flow_1b9g2wu</bpmn:outgoing>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="Flow_1gpsrei" sourceRef="JD_pizza-validation" targetRef="MultiInstance_Pizza" />
     <bpmn:sequenceFlow id="Flow_0wtbaa7" sourceRef="MultiInstance_Pizza" targetRef="InclusiveGateway_AfterValidation" />
@@ -370,6 +416,7 @@
       <bpmn:incoming>Flow_12tar1g</bpmn:incoming>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_0g48z46" errorRef="Error_077s0wf" />
     </bpmn:endEvent>
+<<<<<<< HEAD
     <bpmn:sequenceFlow id="Flow_1svfd2z" sourceRef="UT_DummyUserTask" targetRef="OrderCompleted" />
     <bpmn:userTask id="UT_DummyUserTask" name="Dummy User Task">
       <bpmn:incoming>Flow_1tntr8q</bpmn:incoming>
@@ -425,15 +472,20 @@ if(execution.hasVariable("drinksListObj")){
       <bpmn:sequenceFlow id="Flow_062yyuv" sourceRef="Script_CompletedDrinks" targetRef="MultiInstance_Drinks_End" />
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_0kerkgq" sourceRef="MultiInstance_Drinks" targetRef="InclusiveGateway_AfterValidation" />
+=======
+    <bpmn:sequenceFlow id="Flow_1b9g2wu" sourceRef="Gateway_0i8ie1t" targetRef="customerenrichsignalthrow" />
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
     <bpmn:textAnnotation id="TextAnnotation_0isqirg">
       <bpmn:text>Create an API which can publish a message Pick 
-1) Combo menu
-2) Sides
-3) Drinks</bpmn:text>
+                1) Combo menu
+                2) Sides
+                3) Drinks
+            </bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1qlzuzs" sourceRef="received-order" targetRef="TextAnnotation_0isqirg" />
     <bpmn:textAnnotation id="TextAnnotation_0shlnlg">
-      <bpmn:text>Make sure the user has all the types and toppings of the pizza availablebefore the process</bpmn:text>
+      <bpmn:text>Make sure the user has all the types and toppings of the pizza availablebefore the process
+            </bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_04g2iuk" sourceRef="JD_pizza-validation" targetRef="TextAnnotation_0shlnlg" />
   </bpmn:process>
@@ -514,6 +566,13 @@ if(execution.hasVariable("drinksListObj")){
         <di:waypoint x="430" y="218" />
         <di:waypoint x="530" y="218" />
       </bpmndi:BPMNEdge>
+<<<<<<< HEAD
+=======
+      <bpmndi:BPMNEdge id="Flow_1arl8n2_di" bpmnElement="Flow_1arl8n2">
+        <di:waypoint x="330" y="618" />
+        <di:waypoint x="330" y="702" />
+      </bpmndi:BPMNEdge>
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
       <bpmndi:BPMNEdge id="Flow_1yftprq_di" bpmnElement="Flow_1yftprq">
         <di:waypoint x="800" y="1000" />
         <di:waypoint x="892" y="1000" />
@@ -539,10 +598,13 @@ if(execution.hasVariable("drinksListObj")){
         <di:waypoint x="855" y="1163" />
         <di:waypoint x="982" y="1163" />
       </bpmndi:BPMNEdge>
+<<<<<<< HEAD
       <bpmndi:BPMNEdge id="Flow_14fc9jd_di" bpmnElement="Flow_14fc9jd">
         <di:waypoint x="330" y="475" />
         <di:waypoint x="330" y="512" />
       </bpmndi:BPMNEdge>
+=======
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
       <bpmndi:BPMNEdge id="Flow_0ycoc7n_di" bpmnElement="Flow_0ycoc7n">
         <di:waypoint x="1100" y="1230" />
         <di:waypoint x="1100" y="1181" />
@@ -585,6 +647,7 @@ if(execution.hasVariable("drinksListObj")){
         <di:waypoint x="455" y="450" />
         <di:waypoint x="530" y="450" />
       </bpmndi:BPMNEdge>
+<<<<<<< HEAD
       <bpmndi:BPMNEdge id="Flow_1svfd2z_di" bpmnElement="Flow_1svfd2z">
         <di:waypoint x="1510" y="1540" />
         <di:waypoint x="1562" y="1540" />
@@ -593,6 +656,11 @@ if(execution.hasVariable("drinksListObj")){
         <di:waypoint x="1230" y="750" />
         <di:waypoint x="1370" y="750" />
         <di:waypoint x="1370" y="475" />
+=======
+      <bpmndi:BPMNEdge id="Flow_1b9g2wu_di" bpmnElement="Flow_1b9g2wu">
+        <di:waypoint x="330" y="475" />
+        <di:waypoint x="330" y="582" />
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_06gjiw0_di" bpmnElement="received-order">
         <dc:Bounds x="202" y="432" width="36" height="36" />
@@ -627,6 +695,7 @@ if(execution.hasVariable("drinksListObj")){
       <bpmndi:BPMNShape id="Activity_1h7x5bc_di" bpmnElement="JD_EnrichCustomerPhoneCall">
         <dc:Bounds x="410" y="960" width="100" height="80" />
       </bpmndi:BPMNShape>
+<<<<<<< HEAD
       <bpmndi:BPMNShape id="Event_1vo0gkk_di" bpmnElement="OrderCompleted">
         <dc:Bounds x="1562" y="1522" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -634,6 +703,18 @@ if(execution.hasVariable("drinksListObj")){
         <dc:Bounds x="1410" y="1500" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0g4xxmh_di" bpmnElement="SubProcess_DeliverySystem" isExpanded="true">
+=======
+      <bpmndi:BPMNShape id="Event_1cqdesk_di" bpmnElement="customerenrichsignalthrow">
+        <dc:Bounds x="312" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="222.5" y="586.5" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1kzm55s_di" bpmnElement="Event_1kzm55s">
+        <dc:Bounds x="312" y="702" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0g4xxmh_di" bpmnElement="Activity_1x3ddg5" isExpanded="true">
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
         <dc:Bounds x="410" y="1360" width="900" height="350" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1jv3uxf_di" bpmnElement="Flow_1jv3uxf">
@@ -726,6 +807,7 @@ if(execution.hasVariable("drinksListObj")){
         <dc:Bounds x="700" y="960" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+<<<<<<< HEAD
       <bpmndi:BPMNShape id="Event_1cqdesk_di" bpmnElement="customerenrichsignalthrow">
         <dc:Bounds x="312" y="512" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -733,6 +815,9 @@ if(execution.hasVariable("drinksListObj")){
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1oxg81b_di" bpmnElement="JD_pizza-validation">
+=======
+      <bpmndi:BPMNShape id="Activity_1oxg81b_di" bpmnElement="pizza-validation">
+>>>>>>> branch 'service/initial-hari3' of https://github.com/sejpalj07/camunda-service.git
         <dc:Bounds x="530" y="178" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("ValidateAccountBalance")
 public class ValidateAccountBalance implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered ValidateAccountBalance");
