@@ -43,7 +43,7 @@ public class ValidateSideDelegate implements JavaDelegate {
     private enum SideName {
         BREAD("Garlic Bread"),
         FRIES("Fries"),
-        TEST("test"),
+        GARLIC("Garlic"),
         WINGS("Wings");
         private final String side;
 

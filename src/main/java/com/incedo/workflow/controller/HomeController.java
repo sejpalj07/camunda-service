@@ -17,9 +17,9 @@ import java.util.Random;
 
 @RestController
 public class HomeController {
-    private RuntimeService runtimeService;
-    private TaskService taskService;
-    private Random random = new Random();
+    private final RuntimeService runtimeService;
+    private final TaskService taskService;
+    private final Random random = new Random();
     public HomeController(@Autowired RuntimeService runtimeService, @Autowired TaskService taskService) {
         this.runtimeService = runtimeService;
         this.taskService = taskService;

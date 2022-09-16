@@ -12,7 +12,6 @@ public class EnrichCustomer implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered EnrichCustomer");
-        // api call will get informations from here
         CustomerInfo customerInfo = (CustomerInfo) execution.getVariable("customerInfo");
 
         customerInfo.setName("person1");

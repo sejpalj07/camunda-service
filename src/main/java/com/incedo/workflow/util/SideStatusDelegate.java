@@ -39,7 +39,6 @@ public class SideStatusDelegate implements JavaDelegate {
             log.info("event id : " + eventSubscriptions.get(0));
             execution.getProcessEngineServices()
                     .getRuntimeService()
-//                    .correlateMessage("SideStatusMessage", bKey, correlationKeys, sideStatus);
                     .createMessageCorrelation("SideStatusMessage")
                     .processInstanceBusinessKey(bKey)
                     .setVariables(sideStatus)

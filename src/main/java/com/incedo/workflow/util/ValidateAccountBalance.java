@@ -13,5 +13,4 @@ public class ValidateAccountBalance implements JavaDelegate {
         log.info("Entered ValidateAccountBalance");
         execution.setVariable("sufficientBalance", true);
     }
-
 }
