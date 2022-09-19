@@ -34,41 +34,62 @@ References:
 
 @Deployment(resources = {"PizzaOrderingSystem.bpmn"})
 public class PizzaPaymentWithMockitoTest {
-    public static final String PROCESS_KEY = "PizzaOrderingSystemWithPaymentSystem";
-    public static final String TASK_DELIVER_ORDER = "Task_DeliverOrder";
-    public static final String VAR_ORDER_DELIVERED = "orderDelivered";
-    public static final String PizzaPriceCalculatorDecision = "PizzaPriceCalculatorDecision";
-    public static final String SidePriceCalculatorDecision = "SidePriceCalculatorDecision";
-    public static final String DrinksPriceCalculatorDecision = "DrinksPriceCalculatorDecision";
-    public static final String priceCalculator = "priceCalculator";
+    public static final String PriceCalculatorDecision = "PriceCalculatorDecision";
+    public static final String ValidateDrinksDecision = "ValidateDrinksDecision";
 
     @Rule
     @ClassRule
     public static TestCoverageProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create()
-            .excludeProcessDefinitionKeys(PizzaPriceCalculatorDecision)
-            .excludeProcessDefinitionKeys(SidePriceCalculatorDecision)
-            .excludeProcessDefinitionKeys(DrinksPriceCalculatorDecision)
-            .excludeProcessDefinitionKeys(priceCalculator)
-            .assertClassCoverageAtLeast(0.252)
+            .excludeProcessDefinitionKeys(PriceCalculatorDecision)
+            .excludeProcessDefinitionKeys(ValidateDrinksDecision)
+            .assertClassCoverageAtLeast(0.7)
             .build();
-    SidePrepareOrder sidePrepareOrder;
-    PizzaPrepareOrder pizzaPrepareOrder;
+
+    private SidePrepareOrder sidePrepareOrder;
+    private PizzaPrepareOrder pizzaPrepareOrder;
+
     @Mock
     private ProcessScenario pizzaOrderingSystem;
+    private EnrichCustomer enrichCustomer;
 
     @Before
     public void defaultScenario() {
         MockitoAnnotations.initMocks(this);
-
         Mocks.register("ValidatePizzaDelegate", new ValidatePizzaDelegate());
         Mocks.register("ValidateSideDelegate", new ValidateSideDelegate());
-        Mocks.register("ValidateDrinksDelegate", new ValidateDrinksDelegate());
-        sidePrepareOrder = Mockito.mock(SidePrepareOrder.class);
-        Mocks.register("SidePrepareOrder", sidePrepareOrder);
-        pizzaPrepareOrder = Mockito.mock(PizzaPrepareOrder.class);
-        Mocks.register("PizzaPrepareOrder", pizzaPrepareOrder);
-        Mocks.register("CheckPizzaStatusFromKitchen", Mockito.mock(CheckPizzaStatusFromKitchen.class));
+//        Mocks.register("ValidateDrinksDelegate", new ValidateDrinksDelegate());
+        Mocks.register("SidePrepareOrder", new SidePrepareOrder());
+        Mocks.register("PizzaPrepareOrder", new PizzaPrepareOrder());
+        Mocks.register("CheckPizzaStatusFromKitchen", new CheckPizzaStatusFromKitchen());
+        Mocks.register("CheckSideStatusFromKitchen", new CheckSideStatusFromKitchen());
+        Mocks.register("CombineList", new CombineList());
+        Mocks.register("AddItemListPrice", new AddItemListPrice());
+        Mocks.register("EnrichCustomer", new EnrichCustomer());
+        Mocks.register("FindTotalDelegate", new FindTotalDelegate());
+        Mocks.register("PaymentSystemCall", Mockito.mock(PaymentSystemCall.class));
+        Mocks.register("PickupOrder", new PickupOrder());
+        Mocks.register("HomeDelivery", new HomeDelivery());
+        Mocks.register("DeliverCompleted", new DeliverCompleted());
+        Mocks.register("ErrorLog", new ErrorLog());
 
+        enrichCustomer = Mockito.mock(EnrichCustomer.class);
+        Mocks.register("EnrichCustomer",enrichCustomer);
+        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("MultiInstance_Pizza_RecievePizzaChef"))
+                .thenReturn(task -> {
+                    task.receive();
+                });
+        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("MultiInstance_Side_CallActivity"))
+                .thenReturn(task -> {
+                    task.receive();
+                });
+        when(pizzaOrderingSystem.waitsAtEventBasedGateway("InclusiveGateway_AfterValidation"))
+                .thenReturn(event -> {
+                    event.getEventSubscription().receive();
+                });
+//        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0lh5gyz"))
+//                .thenReturn(task -> {
+//                    task.receive();
+//                });
     }
 
     @Test
@@ -76,21 +97,17 @@ public class PizzaPaymentWithMockitoTest {
         String bKey = "bKey";
         Map<String, Object> variables = foodOrder();
 
-
-        doNothing().when(sidePrepareOrder).execute(any());
-        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0xa3wii"))
+//        doNothing().when(sidePrepareOrder).execute(any());
+//        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("MultiInstance_Side_CallActivity"))
+//                .thenReturn(Mockito.mock(MessageIntermediateCatchEventAction.class));
+        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("MultiInstance_Pizza_RecievePizzaChef"))
                 .thenReturn(Mockito.mock(MessageIntermediateCatchEventAction.class));
-        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0hqdn4x"))
-                .thenReturn(Mockito.mock(MessageIntermediateCatchEventAction.class));
-
-
         Scenario.run(pizzaOrderingSystem)
                 .startByMessage("orderMessage", variables)
                 .execute();
 
-        verify(pizzaOrderingSystem).hasCompleted("side-validation");
-        verify(pizzaOrderingSystem).hasCompleted("Activity_0golmdj");
-        verify(pizzaOrderingSystem).hasCompleted("pizza-validation");
+        verify(pizzaOrderingSystem).hasCompleted("JD_pizza-validation");
+        verify(pizzaOrderingSystem).hasCompleted("JD_side-validation");
     }
 
     public Map<String, Object> foodOrder() {
@@ -113,7 +130,7 @@ public class PizzaPaymentWithMockitoTest {
         order.setAddress("");
         order.setValidationMessage("");
         CustomerInfo customerInfo = new CustomerInfo();
-        customerInfo.setPhonenumber("123456789");
+        customerInfo.setPhoneNumber("123456789");
         order.setCustomerInfo(customerInfo);
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("pizzaList", order.getPizzaList());

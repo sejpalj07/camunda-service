@@ -1,6 +1,7 @@
 package com.incedo.workflow.controller;
 
 import com.incedo.workflow.model.Order;
+import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+@Slf4j
 @RestController
 public class HomeController {
     private final RuntimeService runtimeService;
@@ -26,6 +28,7 @@ public class HomeController {
     }
     @PostMapping("/process")
     public ResponseEntity<String> invokeProcess(@Valid @RequestBody Order order) {
+        log.info("Initial order : "+ order);
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("pizzaList", order.getPizzaList());
         orderMap.put("sideList", order.getSideList());

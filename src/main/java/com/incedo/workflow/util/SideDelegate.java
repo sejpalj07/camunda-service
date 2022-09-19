@@ -12,6 +12,6 @@ public class SideDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         Side side = (Side) execution.getVariable("side");
-        log.info("Side Name :" + side.getSideName());
+        log.info("FROM SIDE DELEGATES >>>> Side Name :" + side);
     }
 }

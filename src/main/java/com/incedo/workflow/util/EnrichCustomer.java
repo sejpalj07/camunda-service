@@ -11,11 +11,8 @@ import org.springframework.stereotype.Component;
 public class EnrichCustomer implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        log.info("Entered EnrichCustomer");
         CustomerInfo customerInfo = (CustomerInfo) execution.getVariable("customerInfo");
-
-        customerInfo.setName("person1");
-        customerInfo.setAlternatePhoneNumber("9876543210");
-        execution.setVariable("order", customerInfo);
+        log.info("From Enrich Customer: " + customerInfo);
+//        execution.setVariable("order", customerInfo);
     }
 }

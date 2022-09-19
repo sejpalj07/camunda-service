@@ -21,7 +21,6 @@ public class ValidatePizzaDelegate implements JavaDelegate {
         log.info(">>>>>>>>>>>>>>>>>>" + execution.getProcessInstance().getProcessBusinessKey());
         List<Pizza> pizzaList = (List<Pizza>) execution.getVariable("pizzaList");
         List<Pizza> newPizzaList = new ArrayList<>();
-        log.info("start validate pizza");
         for (Pizza pizza : pizzaList) {
             String name = pizza.getPizzaName();
             boolean isValidPizzaOrder = Arrays.stream(PizzaName.values())
@@ -39,7 +38,7 @@ public class ValidatePizzaDelegate implements JavaDelegate {
         } else {
             execution.setVariable("pizzaList", newPizzaList);
         }
-        log.info("end validate pizza");
+        log.info("Pizza Validation done.");
     }
 
     private enum PizzaName {
