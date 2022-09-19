@@ -6,6 +6,8 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Slf4j
 @Component("PickupOrder")
 public class PickupOrder implements JavaDelegate {
@@ -14,10 +16,10 @@ public class PickupOrder implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered PickupOrder");
         execution.setVariable("validationError", false);
-        String pickupTime = (String) execution.getVariable("pickupTime");
+        Date pickupTime = (Date) execution.getVariable("pickupTime");
         String validationMessage = (String) execution.getVariable("validationMessage");
 
-        if (pickupTime == null || pickupTime.trim().isEmpty()) {
+        if (pickupTime == null ) {
             execution.setVariable("validationError", true);
             validationMessage = validationMessage + "pickup time is required for pickup order";
             execution.setVariable("validationMessage", validationMessage);

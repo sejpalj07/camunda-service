@@ -8,7 +8,6 @@ import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageP
 import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder;
 import org.camunda.bpm.scenario.ProcessScenario;
 import org.camunda.bpm.scenario.Scenario;
-import org.camunda.bpm.scenario.act.MessageIntermediateCatchEventAction;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -17,12 +16,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /*
 References:
@@ -32,31 +29,22 @@ References:
 4. https://github.com/camunda-community-hub/camunda-platform-7-mockito/blob/master/src/test/java/org/camunda/bpm/extension/mockito/CallActivityMockExampleTest.java
  */
 
-@Deployment(resources = {"PizzaOrderingSystem.bpmn"})
+@Deployment(resources = {"PizzaOrderingSystem.bpmn", "PriceCalculator.dmn"})
 public class PizzaPaymentWithMockitoTest {
     public static final String PROCESS_KEY = "PizzaOrderingSystemWithPaymentSystem";
-    public static final String TASK_DELIVER_ORDER = "Task_DeliverOrder";
-    public static final String VAR_ORDER_DELIVERED = "orderDelivered";
-    public static final String PizzaPriceCalculatorDecision = "PizzaPriceCalculatorDecision";
-    public static final String SidePriceCalculatorDecision = "SidePriceCalculatorDecision";
-    public static final String DrinksPriceCalculatorDecision = "DrinksPriceCalculatorDecision";
-    public static final String priceCalculator = "priceCalculator";
+    public static final String PriceCalculatorDecision = "PriceCalculatorDecision";
 
     @Rule
     @ClassRule
     public static TestCoverageProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create()
-            .excludeProcessDefinitionKeys(PizzaPriceCalculatorDecision)
-            .excludeProcessDefinitionKeys(SidePriceCalculatorDecision)
-            .excludeProcessDefinitionKeys(DrinksPriceCalculatorDecision)
-            .excludeProcessDefinitionKeys(priceCalculator)
-            .assertClassCoverageAtLeast(0.252)
+            .excludeProcessDefinitionKeys(PriceCalculatorDecision)
+            .assertClassCoverageAtLeast(0.715)
             .build();
 
     @Mock
     private ProcessScenario pizzaOrderingSystem;
 
-    SidePrepareOrder sidePrepareOrder;
-    PizzaPrepareOrder pizzaPrepareOrder;
+    EnrichCustomer enrichCustomer;
 
     @Before
     public void defaultScenario() {
@@ -65,27 +53,88 @@ public class PizzaPaymentWithMockitoTest {
         Mocks.register("ValidatePizzaDelegate", new ValidatePizzaDelegate());
         Mocks.register("ValidateSideDelegate", new ValidateSideDelegate());
         Mocks.register("ValidateDrinksDelegate", new ValidateDrinksDelegate());
-        sidePrepareOrder = Mockito.mock(SidePrepareOrder.class);
-        Mocks.register("SidePrepareOrder", sidePrepareOrder);
-        pizzaPrepareOrder = Mockito.mock(PizzaPrepareOrder.class);
-        Mocks.register("PizzaPrepareOrder", pizzaPrepareOrder);
-        Mocks.register("CheckPizzaStatusFromKitchen", Mockito.mock(CheckPizzaStatusFromKitchen.class));
+//        sidePrepareOrder = Mockito.mock(SidePrepareOrder.class);
+//        sidePrepareOrder = new SidePrepareOrder();
+        Mocks.register("SidePrepareOrder", new SidePrepareOrder());
+//        pizzaPrepareOrder = Mockito.mock(PizzaPrepareOrder.class);
+////        pizzaPrepareOrder = new PizzaPrepareOrder();
+        Mocks.register("PizzaPrepareOrder", new PizzaPrepareOrder());
+//        checkPizzaStatusFromKitchen = Mockito.mock(CheckPizzaStatusFromKitchen.class);
+////        checkPizzaStatusFromKitchen = new CheckPizzaStatusFromKitchen();
+        Mocks.register("CheckPizzaStatusFromKitchen", new CheckPizzaStatusFromKitchen());
+//        checkSideStatusFromKitchen = Mockito.mock(CheckSideStatusFromKitchen.class);
+////        checkSideStatusFromKitchen = new CheckSideStatusFromKitchen();
+        Mocks.register("CheckSideStatusFromKitchen", new CheckSideStatusFromKitchen());
+//        combineList = Mockito.mock(CombineList.class);
+////        combineList = new CombineList();
+        Mocks.register("CombineList", new CombineList());
+//        addItemListPrice = Mockito.mock(AddItemListPrice.class);
+////        addItemListPrice = new AddItemListPrice();
+        Mocks.register("AddItemListPrice", new AddItemListPrice());
+        Mocks.register("EnrichCustomer", new EnrichCustomer());
+        Mocks.register("FindTotalDelegate", new FindTotalDelegate());
+        Mocks.register("PaymentSystemCall", Mockito.mock(PaymentSystemCall.class));
+        Mocks.register("PickupOrder", new PickupOrder());
+        Mocks.register("HomeDelivery", new HomeDelivery());
+        Mocks.register("DeliverCompleted", new DeliverCompleted());
+        Mocks.register("ErrorLog", new ErrorLog());
+
+        enrichCustomer = Mockito.mock(EnrichCustomer.class);
+        Mocks.register("EnrichCustomer",enrichCustomer);
+        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0hqdn4x"))
+                .thenReturn(task -> {
+                    task.receive();
+                });
+        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0xa3wii"))
+                .thenReturn(task -> {
+                    task.receive();
+                });
+        when(pizzaOrderingSystem.waitsAtEventBasedGateway("Gateway_0rwyarm"))
+                .thenReturn(event -> {
+                    event.getEventSubscription().receive();
+                });
+        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0lh5gyz"))
+                .thenReturn(task -> {
+                    task.receive();
+                });
 
     }
 
     @Test
-    public void shouldExecuteHappyPath() throws Exception {
+    public void shouldExecuteHappyPathWithPickup() throws Exception {
         String bKey = "bKey";
         Map<String, Object> variables = foodOrder();
 
+        Scenario.run(pizzaOrderingSystem)
+                .startByMessage("orderMessage", variables)
+                .execute();
 
-        doNothing().when(sidePrepareOrder).execute(any());
-        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0xa3wii"))
-                .thenReturn(Mockito.mock(MessageIntermediateCatchEventAction.class));
-        when(pizzaOrderingSystem.waitsAtMessageIntermediateCatchEvent("Event_0hqdn4x"))
-                .thenReturn(Mockito.mock(MessageIntermediateCatchEventAction.class));
+        verify(pizzaOrderingSystem).hasCompleted("side-validation");
+        verify(pizzaOrderingSystem).hasCompleted("Activity_0golmdj");
+        verify(pizzaOrderingSystem).hasCompleted("pizza-validation");
+    }
 
+    @Test
+    public void shouldExecuteHappyPathWithHomeDelivery() throws Exception {
+        String bKey = "bKey";
+        Map<String, Object> variables = foodOrder();
+        variables.put("deliveryType", "instore");
+        variables.put("address", "some address");
+        Scenario.run(pizzaOrderingSystem)
+                .startByMessage("orderMessage", variables)
+                .execute();
 
+        verify(pizzaOrderingSystem).hasCompleted("side-validation");
+        verify(pizzaOrderingSystem).hasCompleted("Activity_0golmdj");
+        verify(pizzaOrderingSystem).hasCompleted("pizza-validation");
+    }
+
+    @Test
+    public void shouldExecuteErrorPathWithNoAddressErrorLog() throws Exception {
+        String bKey = "bKey";
+        Map<String, Object> variables = foodOrder();
+        variables.put("deliveryType", "instore");
+        variables.put("address", "");//empty address
         Scenario.run(pizzaOrderingSystem)
                 .startByMessage("orderMessage", variables)
                 .execute();
@@ -111,7 +160,8 @@ public class PizzaPaymentWithMockitoTest {
         drinkList.add("Water");
         order.setDrinksList(drinkList);
         order.setPaymentType("online");
-        order.setDeliveryType("pickup"); // order.setPickupTime("2018-03-29T13:34:00.000");
+        order.setDeliveryType("pickup");
+        order.setPickupTime(new Date());
         order.setAddress("");
         order.setValidationMessage("");
         CustomerInfo customerInfo = new CustomerInfo();
@@ -121,7 +171,7 @@ public class PizzaPaymentWithMockitoTest {
         orderMap.put("pizzaList", order.getPizzaList());
         orderMap.put("sideList", order.getSideList());
         orderMap.put("drinksList", order.getDrinksList());
-        orderMap.put("ItemList", ItemList);
+        orderMap.put("itemList", ItemList);
         orderMap.put("paymentType", order.getPaymentType());
         orderMap.put("deliveryType", order.getDeliveryType());
         orderMap.put("pickupTime", order.getPickupTime());
