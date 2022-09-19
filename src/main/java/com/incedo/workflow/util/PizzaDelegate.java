@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("PizzaDelegate")
 public class PizzaDelegate implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         Pizza pizza = (Pizza) execution.getVariable("pizza");

@@ -9,16 +9,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("EnrichCustomer")
 public class EnrichCustomer implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered EnrichCustomer");
-        // api call will get informations from here
         CustomerInfo customerInfo = (CustomerInfo) execution.getVariable("customerInfo");
 
         customerInfo.setName("person1");
         customerInfo.setAlternatePhoneNumber("9876543210");
         execution.setVariable("order", customerInfo);
     }
-
 }

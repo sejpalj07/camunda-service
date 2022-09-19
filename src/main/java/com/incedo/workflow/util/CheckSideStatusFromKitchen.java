@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("CheckSideStatusFromKitchen")
 public class CheckSideStatusFromKitchen implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info(">>CheckSideStatusFromKitchen");

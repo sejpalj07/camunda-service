@@ -11,7 +11,6 @@ import java.util.Map;
 @Slf4j
 @Component("PaymentSystemCall")
 public class PaymentSystemCall implements JavaDelegate {
-
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.info("Entered PaymentSystemCall");

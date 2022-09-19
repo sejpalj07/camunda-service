@@ -17,15 +17,13 @@ import java.util.Random;
 
 @RestController
 public class HomeController {
-    RuntimeService runtimeService;
-    TaskService taskService;
-
-    public HomeController(@Autowired RuntimeService runtimeService,
-                          @Autowired TaskService taskService) {
+    private final RuntimeService runtimeService;
+    private final TaskService taskService;
+    private final Random random = new Random();
+    public HomeController(@Autowired RuntimeService runtimeService, @Autowired TaskService taskService) {
         this.runtimeService = runtimeService;
         this.taskService = taskService;
     }
-
     @PostMapping("/process")
     public ResponseEntity<String> invokeProcess(@Valid @RequestBody Order order) {
         Map<String, Object> orderMap = new HashMap<>();
@@ -38,13 +36,8 @@ public class HomeController {
         orderMap.put("address", order.getAddress());
         orderMap.put("validationMessage", order.getValidationMessage());
         orderMap.put("customerInfo", order.getCustomerInfo());
-        Random random = new Random();
         String bKey = String.valueOf(Math.abs(random.nextInt()));
-
         this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);
-
-        //runtimeService.
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }
-
 }
