@@ -196,7 +196,7 @@
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_19x4low" sourceRef="JD_ConfirmCompletedSide" targetRef="MultiInstance_Side_End" />
       <bpmn:sequenceFlow id="Flow_1mgtry6" sourceRef="MultiInstance_Side_Start" targetRef="MultiInstance_Side_CallActivity" />
-      <bpmn:callActivity id="MultiInstance_Side_CallActivity" name="Call assistant Chef" calledElement="assistant-chef">
+      <bpmn:callActivity id="MultiInstance_Side_CallActivity" name="Call assistant Chef" calledElement="AssistantChef">
         <bpmn:extensionElements>
           <camunda:in source="eachSide" target="side" />
         </bpmn:extensionElements>
@@ -431,6 +431,26 @@ if(execution.hasVariable("drinksListObj")){
       <bpmn:text>Make sure the user has all the types and toppings of the pizza availablebefore the process</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_04g2iuk" sourceRef="JD_pizza-validation" targetRef="TextAnnotation_0shlnlg" />
+    <bpmn:textAnnotation id="TextAnnotation_1utptcc">
+      <bpmn:text>will throw this error when item is not valid from validation delegates</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0i4yyyl" sourceRef="Activity_16848ox" targetRef="TextAnnotation_1utptcc" />
+    <bpmn:textAnnotation id="TextAnnotation_1xst8nx">
+      <bpmn:text>will throw this error from validation delegate when all list get empty</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1agr4gg" sourceRef="Activity_0yo9w8n" targetRef="TextAnnotation_1xst8nx" />
+    <bpmn:textAnnotation id="TextAnnotation_1gfqr1u">
+      <bpmn:text>will throw this error  from timer boundary  event when it takes longer time to receive the order complete message from backhouse.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_11oinfu" sourceRef="Activity_1puo3aw" targetRef="TextAnnotation_1gfqr1u" />
+    <bpmn:textAnnotation id="TextAnnotation_05sybyj">
+      <bpmn:text>will throw this error when main system couldn't send message to backhouse</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1xmthxd" sourceRef="Activity_167l9ci" targetRef="TextAnnotation_05sybyj" />
+    <bpmn:textAnnotation id="TextAnnotation_068awp9">
+      <bpmn:text>will throw this error from AddItemListPrice delegate when price of item is not found in the dmn table</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1jm1arj" sourceRef="Activity_1ph46wf" targetRef="TextAnnotation_068awp9" />
   </bpmn:process>
   <bpmn:message id="Message_1m51tbu" name="orderMessage" />
   <bpmn:message id="Message_0ga8f6c" name="sideCreationMessage" />
@@ -614,12 +634,12 @@ if(execution.hasVariable("drinksListObj")){
       <bpmndi:BPMNShape id="Event_1vo0gkk_di" bpmnElement="OrderCompleted">
         <dc:Bounds x="1562" y="1522" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0an41av_di" bpmnElement="SignalRecievedEnd">
+        <dc:Bounds x="632" y="982" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1h7x5bc_di" bpmnElement="JD_EnrichCustomerPhoneCall">
         <dc:Bounds x="410" y="960" width="100" height="80" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0an41av_di" bpmnElement="SignalRecievedEnd">
-        <dc:Bounds x="632" y="982" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0g4xxmh_di" bpmnElement="SubProcess_DeliverySystem" isExpanded="true">
         <dc:Bounds x="410" y="1360" width="900" height="350" />
@@ -1001,6 +1021,26 @@ if(execution.hasVariable("drinksListObj")){
         <dc:Bounds x="535" y="80" width="210" height="50" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1utptcc_di" bpmnElement="TextAnnotation_1utptcc">
+        <dc:Bounds x="3310" y="433" width="99.99999794078421" height="83.67071524966262" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1xst8nx_di" bpmnElement="TextAnnotation_1xst8nx">
+        <dc:Bounds x="3290" y="650" width="99.99999815826324" height="83.88654194327097" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1gfqr1u_di" bpmnElement="TextAnnotation_1gfqr1u">
+        <dc:Bounds x="3280" y="900" width="220" height="82" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_05sybyj_di" bpmnElement="TextAnnotation_05sybyj">
+        <dc:Bounds x="3280" y="1120" width="180" height="61" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_068awp9_di" bpmnElement="TextAnnotation_068awp9">
+        <dc:Bounds x="3290" y="1430" width="200" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0njo0rs_di" bpmnElement="MultiInstance_Side_TimerBoundaryEvent">
         <dc:Bounds x="1052" y="542" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -1017,6 +1057,26 @@ if(execution.hasVariable("drinksListObj")){
       <bpmndi:BPMNEdge id="Association_04g2iuk_di" bpmnElement="Association_04g2iuk">
         <di:waypoint x="580" y="178" />
         <di:waypoint x="581" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0i4yyyl_di" bpmnElement="Association_0i4yyyl">
+        <di:waypoint x="3170" y="457" />
+        <di:waypoint x="3310" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1agr4gg_di" bpmnElement="Association_1agr4gg">
+        <di:waypoint x="3170" y="682" />
+        <di:waypoint x="3290" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_11oinfu_di" bpmnElement="Association_11oinfu">
+        <di:waypoint x="3170" y="928" />
+        <di:waypoint x="3280" y="919" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1xmthxd_di" bpmnElement="Association_1xmthxd">
+        <di:waypoint x="3175" y="1160" />
+        <di:waypoint x="3280" y="1143" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1jm1arj_di" bpmnElement="Association_1jm1arj">
+        <di:waypoint x="3175" y="1455" />
+        <di:waypoint x="3290" y="1448" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
