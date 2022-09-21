@@ -276,12 +276,12 @@
       </bpmn:startEvent>
     </bpmn:subProcess>
     <bpmn:subProcess id="Activity_16848ox" name="Invalid Item Exception" triggeredByEvent="true">
-      <bpmn:sequenceFlow id="Flow_0jhcrh4" sourceRef="Event_1dwqmya" targetRef="Activity_0hm3hoa" />
-      <bpmn:userTask id="Activity_0hm3hoa" name="review the order">
+      <bpmn:sequenceFlow id="Flow_0jhcrh4" sourceRef="Event_1dwqmya" targetRef="UT_Invalid_Item" />
+      <bpmn:userTask id="UT_Invalid_Item" name="review the order">
         <bpmn:incoming>Flow_0jhcrh4</bpmn:incoming>
         <bpmn:outgoing>Flow_1nyf0rs</bpmn:outgoing>
       </bpmn:userTask>
-      <bpmn:sequenceFlow id="Flow_1nyf0rs" sourceRef="Activity_0hm3hoa" targetRef="Event_00pp3ra" />
+      <bpmn:sequenceFlow id="Flow_1nyf0rs" sourceRef="UT_Invalid_Item" targetRef="Event_00pp3ra" />
       <bpmn:startEvent id="Event_1dwqmya">
         <bpmn:outgoing>Flow_0jhcrh4</bpmn:outgoing>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_1isj2h6" errorRef="Error_10r2h2e" />
@@ -301,7 +301,7 @@
         <bpmn:outgoing>Flow_16vrjof</bpmn:outgoing>
       </bpmn:startEvent>
       <bpmn:sequenceFlow id="Flow_16vrjof" sourceRef="MultiInstance_CalculatePrice_Start" targetRef="MultiInstance_CalculatePrice_DMN" />
-      <bpmn:sequenceFlow id="Flow_1g497o2" sourceRef="MultiInstance_CalculatePrice_DMN" targetRef="MultiInstance_CalculatePrice_JD_AddPrice" />
+      <bpmn:sequenceFlow id="Flow_1g497o2" sourceRef="MultiInstance_CalculatePrice_DMN" targetRef="JD_AddPrice" />
       <bpmn:endEvent id="MultiInstance_CalculatePrice_End">
         <bpmn:incoming>Flow_1nzhz2p</bpmn:incoming>
       </bpmn:endEvent>
@@ -309,8 +309,8 @@
         <bpmn:incoming>Flow_16vrjof</bpmn:incoming>
         <bpmn:outgoing>Flow_1g497o2</bpmn:outgoing>
       </bpmn:businessRuleTask>
-      <bpmn:sequenceFlow id="Flow_1nzhz2p" sourceRef="MultiInstance_CalculatePrice_JD_AddPrice" targetRef="MultiInstance_CalculatePrice_End" />
-      <bpmn:serviceTask id="MultiInstance_CalculatePrice_JD_AddPrice" name="Add price" camunda:delegateExpression="${AddItemListPrice}">
+      <bpmn:sequenceFlow id="Flow_1nzhz2p" sourceRef="JD_AddPrice" targetRef="MultiInstance_CalculatePrice_End" />
+      <bpmn:serviceTask id="JD_AddPrice" name="Add price" camunda:delegateExpression="${AddItemListPrice}">
         <bpmn:incoming>Flow_1g497o2</bpmn:incoming>
         <bpmn:outgoing>Flow_1nzhz2p</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -886,7 +886,7 @@ if(execution.hasVariable("drinksListObj")){
         <di:waypoint x="2815" y="468" />
         <di:waypoint x="2870" y="468" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Activity_1uandns_di" bpmnElement="Activity_0hm3hoa">
+      <bpmndi:BPMNShape id="Activity_1uandns_di" bpmnElement="UT_Invalid_Item">
         <dc:Bounds x="2870" y="428" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
@@ -921,7 +921,7 @@ if(execution.hasVariable("drinksListObj")){
       <bpmndi:BPMNShape id="Activity_1q32r7h_di" bpmnElement="MultiInstance_CalculatePrice_DMN">
         <dc:Bounds x="1890" y="410" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0t74r0a_di" bpmnElement="MultiInstance_CalculatePrice_JD_AddPrice">
+      <bpmndi:BPMNShape id="Activity_0t74r0a_di" bpmnElement="JD_AddPrice">
         <dc:Bounds x="2050" y="410" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>

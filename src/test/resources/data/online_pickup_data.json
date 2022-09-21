@@ -1,0 +1,45 @@
+[{
+  "pizzaList": [
+    {
+      "pizzaId": 12,
+      "pizzaName": "Veggie Pizza",
+      "toppings": [
+        "greenpapper",
+        "mushroom"
+      ]
+    },
+    {
+      "pizzaId": 13,
+      "pizzaName": "Cheese Pizza",
+      "toppings": [
+        "greenpapper",
+        "mushroom"
+      ]
+    }
+  ],
+  "sideList": [
+    {
+      "sideId": 14,
+      "sideName": "Garlic Bread"
+    },
+    {
+      "sideId": 15,
+      "sideName": "Garlic Bread"
+    }
+  ],
+  "drinksList": [
+    "Soda",
+    "Iced Tea",
+    "Water"
+  ],
+  "paymentType": "online",
+  "deliveryType": "pickup",
+  "pickupTime": "2018-03-29T13:34:00.000",
+  "address": "1001 Fuller Wiser Rd",
+  "validationMessage": "",
+  "customerInfo": {
+    "name": "John",
+    "phoneNumber": "123456789",
+    "alternatePhoneNumber": "123456789"
+  }
+}]
