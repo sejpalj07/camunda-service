@@ -42,9 +42,9 @@
       <bpmn:incoming>Flow_1tntr8q</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="Event_0an41av">
-      <bpmn:incoming>Flow_1yftprq</bpmn:incoming>
+      <bpmn:incoming>Flow_0dq30vc</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0dq30vc" sourceRef="enrichcustomerphonecall" targetRef="Activity_0iawxac" />
+    <bpmn:sequenceFlow id="Flow_0dq30vc" sourceRef="enrichcustomerphonecall" targetRef="Event_0an41av" />
     <bpmn:sequenceFlow id="Flow_13cjbas" sourceRef="customerenrichsignalcatch" targetRef="enrichcustomerphonecall" />
     <bpmn:serviceTask id="enrichcustomerphonecall" name="enrich customer phone call" camunda:delegateExpression="${EnrichCustomer}">
       <bpmn:incoming>Flow_13cjbas</bpmn:incoming>
@@ -141,11 +141,6 @@
     <bpmn:sequenceFlow id="Flow_087gr9t" sourceRef="Gateway_0rwyarm" targetRef="Event_1ffphf4" />
     <bpmn:sequenceFlow id="Flow_1vqnkug" sourceRef="Event_1ffphf4" targetRef="CashPayment" />
     <bpmn:sequenceFlow id="Flow_0da122v" sourceRef="Event_0lh5gyz" targetRef="DeliverySystemException" />
-    <bpmn:sequenceFlow id="Flow_1yftprq" sourceRef="Activity_0iawxac" targetRef="Event_0an41av" />
-    <bpmn:userTask id="Activity_0iawxac" name="validate signal received">
-      <bpmn:incoming>Flow_0dq30vc</bpmn:incoming>
-      <bpmn:outgoing>Flow_1yftprq</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_0st7e5c" sourceRef="Gateway_0knz79p" targetRef="pizza-validation">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pizzaList.size() &gt; 0}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -329,46 +324,15 @@
       <bpmn:incoming>Flow_1rfpozb</bpmn:incoming>
       <bpmn:outgoing>Flow_1vt9akd</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_0cqeusw" sourceRef="customerenrichsignalcatch" targetRef="enrich_customer_with_httpconnector" />
-    <bpmn:serviceTask id="enrich_customer_with_httpconnector" name="enrich customer with http-connector">
-      <bpmn:extensionElements>
-        <camunda:connector>
-          <camunda:inputOutput>
-            <camunda:inputParameter name="url">https://run.mocky.io/v3/82c9794a-b96b-4a8c-9999-01df4e19d506</camunda:inputParameter>
-            <camunda:inputParameter name="method">GET</camunda:inputParameter>
-            <camunda:outputParameter name="customerEnrichResponse">${response}</camunda:outputParameter>
-            <camunda:outputParameter name="customerEnrichResponseStatusCode">${statusCode}</camunda:outputParameter>
-          </camunda:inputOutput>
-          <camunda:connectorId>http-connector</camunda:connectorId>
-        </camunda:connector>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0cqeusw</bpmn:incoming>
-      <bpmn:outgoing>Flow_1afkrou</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1afkrou" sourceRef="enrich_customer_with_httpconnector" targetRef="Activity_0f0crys" />
-    <bpmn:endEvent id="Event_1n99sgq">
-      <bpmn:incoming>Flow_1amcrve</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1amcrve" sourceRef="Activity_0f0crys" targetRef="Event_1n99sgq" />
     <bpmn:intermediateThrowEvent id="customerenrichsignalthrow" name="customer enrich signal throw" camunda:asyncAfter="true">
       <bpmn:incoming>Flow_14fc9jd</bpmn:incoming>
       <bpmn:linkEventDefinition id="LinkEventDefinition_09o2c0n" name="customerEnrich" />
     </bpmn:intermediateThrowEvent>
     <bpmn:intermediateCatchEvent id="customerenrichsignalcatch" name="customer enrich signal catch">
       <bpmn:outgoing>Flow_13cjbas</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0cqeusw</bpmn:outgoing>
       <bpmn:linkEventDefinition id="LinkEventDefinition_1y4iy4t" name="customerEnrich" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:userTask id="Activity_0f0crys" name="validate http-connector">
-      <bpmn:extensionElements>
-        <camunda:formData businessKey="customerEnrichResponseStatusCode">
-          <camunda:formField id="customerEnrichResponseStatusCode" label="customerEnrichResponseStatusCode" type="long" defaultValue="${customerEnrichResponseStatusCode}" />
-          <camunda:formField id="customerEnrichResponse" label="customerEnrichResponse" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1afkrou</bpmn:incoming>
-      <bpmn:outgoing>Flow_1amcrve</bpmn:outgoing>
-    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1n99sgq" />
     <bpmn:textAnnotation id="TextAnnotation_0isqirg">
       <bpmn:text>Create an API which can publish a message Pick 
 1) Combo menu
@@ -452,10 +416,6 @@
         <di:waypoint x="430" y="218" />
         <di:waypoint x="530" y="218" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1yftprq_di" bpmnElement="Flow_1yftprq">
-        <di:waypoint x="790" y="1140" />
-        <di:waypoint x="882" y="1140" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0da122v_di" bpmnElement="Flow_0da122v">
         <di:waypoint x="1008" y="1303" />
         <di:waypoint x="1072" y="1303" />
@@ -509,7 +469,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0dq30vc_di" bpmnElement="Flow_0dq30vc">
         <di:waypoint x="500" y="1140" />
-        <di:waypoint x="690" y="1140" />
+        <di:waypoint x="882" y="1140" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xln4hv_di" bpmnElement="Flow_0xln4hv">
         <di:waypoint x="238" y="450" />
@@ -523,20 +483,6 @@
       <bpmndi:BPMNEdge id="Flow_19yh0vy_di" bpmnElement="Flow_19yh0vy">
         <di:waypoint x="455" y="450" />
         <di:waypoint x="530" y="450" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0cqeusw_di" bpmnElement="Flow_0cqeusw">
-        <di:waypoint x="258" y="1140" />
-        <di:waypoint x="330" y="1140" />
-        <di:waypoint x="330" y="980" />
-        <di:waypoint x="400" y="980" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1afkrou_di" bpmnElement="Flow_1afkrou">
-        <di:waypoint x="500" y="980" />
-        <di:waypoint x="650" y="980" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1amcrve_di" bpmnElement="Flow_1amcrve">
-        <di:waypoint x="750" y="980" />
-        <di:waypoint x="902" y="980" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_06gjiw0_di" bpmnElement="received-order">
         <dc:Bounds x="202" y="432" width="36" height="36" />
@@ -573,29 +519,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1h7x5bc_di" bpmnElement="enrichcustomerphonecall">
         <dc:Bounds x="400" y="1100" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_08fred2_di" bpmnElement="enrich_customer_with_httpconnector">
-        <dc:Bounds x="400" y="940" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1n99sgq_di" bpmnElement="Event_1n99sgq">
-        <dc:Bounds x="902" y="962" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_10e2q4n_di" bpmnElement="customerenrichsignalthrow">
-        <dc:Bounds x="312" y="512" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="218" y="520" width="79" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1wd2g31_di" bpmnElement="customerenrichsignalcatch">
-        <dc:Bounds x="222" y="1122" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="201" y="1165" width="79" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_195hab0_di" bpmnElement="Activity_0f0crys">
-        <dc:Bounds x="650" y="940" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0g4xxmh_di" bpmnElement="Activity_1x3ddg5" isExpanded="true">
         <dc:Bounds x="400" y="1500" width="900" height="350" />
@@ -679,10 +602,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ffphf4_di" bpmnElement="Event_1ffphf4">
         <dc:Bounds x="891" y="1392" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0nrex4i_di" bpmnElement="Activity_0iawxac">
-        <dc:Bounds x="690" y="1100" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1oxg81b_di" bpmnElement="pizza-validation">
         <dc:Bounds x="530" y="178" width="100" height="80" />
@@ -898,6 +817,21 @@
       <bpmndi:BPMNShape id="Activity_16wzp3m_di" bpmnElement="Activity_0dr7y25">
         <dc:Bounds x="1470" y="410" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1n99sgq_di" bpmnElement="Event_1n99sgq">
+        <dc:Bounds x="902" y="962" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10e2q4n_di" bpmnElement="customerenrichsignalthrow">
+        <dc:Bounds x="312" y="512" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="218" y="520" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wd2g31_di" bpmnElement="customerenrichsignalcatch">
+        <dc:Bounds x="222" y="1122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="201" y="1165" width="79" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0isqirg_di" bpmnElement="TextAnnotation_0isqirg">
         <dc:Bounds x="185" y="200" width="170" height="120" />

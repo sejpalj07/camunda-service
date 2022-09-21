@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1vqgixp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.1.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="genericapidemo" name="genericapidemo" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0o0rl19</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0o0rl19" sourceRef="StartEvent_1" targetRef="createrequest" />
+    <bpmn:sequenceFlow id="Flow_17fcbqy" sourceRef="genericapidelegate" targetRef="Activity_1sxhq5h" />
+    <bpmn:endEvent id="Event_0n9b5v9">
+      <bpmn:incoming>Flow_0nbeo7l</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0nbeo7l" sourceRef="Activity_1sxhq5h" targetRef="Event_0n9b5v9" />
+    <bpmn:userTask id="Activity_1sxhq5h">
+      <bpmn:incoming>Flow_17fcbqy</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nbeo7l</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="genericapidelegate" name="genericapidelegate" camunda:delegateExpression="${RestApiIntegratorService}">
+      <bpmn:incoming>Flow_0jp0upj</bpmn:incoming>
+      <bpmn:outgoing>Flow_17fcbqy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0jp0upj" sourceRef="createrequest" targetRef="genericapidelegate" />
+    <bpmn:serviceTask id="createrequest" name="create request" camunda:delegateExpression="${CreateRequestObject}">
+      <bpmn:incoming>Flow_0o0rl19</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jp0upj</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="genericapidemo">
+      <bpmndi:BPMNEdge id="Flow_0o0rl19_di" bpmnElement="Flow_0o0rl19">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17fcbqy_di" bpmnElement="Flow_17fcbqy">
+        <di:waypoint x="560" y="117" />
+        <di:waypoint x="620" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nbeo7l_di" bpmnElement="Flow_0nbeo7l">
+        <di:waypoint x="720" y="117" />
+        <di:waypoint x="782" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jp0upj_di" bpmnElement="Flow_0jp0upj">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="460" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0n9b5v9_di" bpmnElement="Event_0n9b5v9">
+        <dc:Bounds x="782" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0m9dwuc_di" bpmnElement="Activity_1sxhq5h">
+        <dc:Bounds x="620" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15r8dk7_di" bpmnElement="genericapidelegate">
+        <dc:Bounds x="460" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ai07um_di" bpmnElement="createrequest">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
