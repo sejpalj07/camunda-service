@@ -96,6 +96,14 @@ public class PizzaPaymentWithMockitoTest {
                 .thenReturn(task -> {
                     task.complete();
                 });
+        when(pizzaOrderingSystem.waitsAtUserTask("Activity_TimeOutfromBackHouse"))
+        .thenReturn(task -> {
+            task.complete();
+        });
+        when(pizzaOrderingSystem.waitsAtUserTask("Activity_NoDeliveryType"))
+        .thenReturn(task -> {
+            task.complete();
+        });
         when(pizzaOrderingSystem.waitsAtUserTask("UT_DummyUserTask"))
                 .thenReturn(task -> {
                     task.complete();
@@ -224,5 +232,100 @@ public class PizzaPaymentWithMockitoTest {
         orderMap.put("customerInfo", order.getCustomerInfo());
         return orderMap;
     }
+    
+    
+    @Test
+    public void PizzaOrderingSystemHomeDeliveryTest( ) throws Exception {
+        String path = "src/test/resources/data/online_delivery_data_Exception.json";
+       List<Map<String, Object>> variables = foodOrder(path);
+       for (Map<String, Object> var:variables) {
+//           Mockito.reset(pizzaOrderingSystem);
+           when(pizzaOrderingSystem.runsCallActivity("MultiInstance_Side_CallActivity"))
+                   .thenReturn(Scenario.use(AssistantChef));
+           when(pizzaOrderingSystem.waitsAtEventBasedGateway("EventBasedGateway_WaitForPayment"))
+                   .thenReturn(gateway -> {
+                       gateway.getEventSubscription().receive();
+                   });
+           Scenario.run(pizzaOrderingSystem)
+                   .startByMessage("orderMessage", var)
+                   .execute();
+           verify(pizzaOrderingSystem).hasCompleted("JD_pizza-validation");
+           verify(pizzaOrderingSystem).hasCompleted("JD_side-validation");
+       }
+   }
+    
+    
+    @Test
+    public void PizzaOrderingSystemEmptyPizzaList() throws Exception {
+        String path = "src/test/resources/data/EmptyPizzaList.json";
+       List<Map<String, Object>> variables = foodOrder(path);
+       for (Map<String, Object> var:variables) {
+//           Mockito.reset(pizzaOrderingSystem);
+           when(pizzaOrderingSystem.runsCallActivity("MultiInstance_Side_CallActivity"))
+                   .thenReturn(Scenario.use(AssistantChef));
+           when(pizzaOrderingSystem.waitsAtEventBasedGateway("EventBasedGateway_WaitForPayment"))
+                   .thenReturn(gateway -> {
+                       gateway.getEventSubscription().receive();
+                   });
+           Scenario.run(pizzaOrderingSystem)
+                   .startByMessage("orderMessage", var)
+                   .execute();
+       }
+   }
+    
+    @Test
+    public void PizzaOrderingSystemAssistantChefError() throws Exception {
+        String path = "src/test/resources/data/online_delivery_data_Exception.json";
+       List<Map<String, Object>> variables = foodOrder(path);
+       for (Map<String, Object> var:variables) {
+//           Mockito.reset(pizzaOrderingSystem);
+           when(pizzaOrderingSystem.runsCallActivity("MultiInstance_Side_CallActivity"))
+                   .thenReturn(Scenario.use(AssistantChef));
+           when(pizzaOrderingSystem.waitsAtEventBasedGateway("EventBasedGateway_WaitForPayment"))
+                   .thenReturn(gateway -> {
+                       gateway.getEventSubscription().receive();
+                   });
+           Scenario.run(pizzaOrderingSystem).startByKey("PizzaOrderingSystem").fromAfter("MultiInstance_Side_TimerBoundaryEvent").execute();
+                   
+       }
+   }
+    
+    @Test
+    public void PizzaOrderingSystemPizzaChefError() throws Exception {
+        String path = "src/test/resources/data/online_delivery_data_Exception.json";
+       List<Map<String, Object>> variables = foodOrder(path);
+       for (Map<String, Object> var:variables) {
+//           Mockito.reset(pizzaOrderingSystem);
+           when(pizzaOrderingSystem.runsCallActivity("MultiInstance_Side_CallActivity"))
+                   .thenReturn(Scenario.use(AssistantChef));
+           when(pizzaOrderingSystem.waitsAtEventBasedGateway("EventBasedGateway_WaitForPayment"))
+                   .thenReturn(gateway -> {
+                       gateway.getEventSubscription().receive();
+                   });
+           Scenario.run(pizzaOrderingSystem).startByKey("PizzaOrderingSystem").fromAfter("MultiInstance_Pizza_TimerBoundaryEvent").execute();
+                   
+       }
+   }
+    
+    @Test
+    public void PizzaOrderingSystemCashPayment() throws Exception {
+        String path = "src/test/resources/data/cashPayment.json";
+       List<Map<String, Object>> variables = foodOrder(path);
+       Map<String, Object> sample = new HashMap<>();
+       sample.put("deliveryType", "pickup");
+       variables.add(sample);
+       
+       for (Map<String, Object> var:variables) {
+//           Mockito.reset(pizzaOrderingSystem);
+           when(pizzaOrderingSystem.runsCallActivity("MultiInstance_Side_CallActivity"))
+                   .thenReturn(Scenario.use(AssistantChef));
+           when(pizzaOrderingSystem.waitsAtEventBasedGateway("EventBasedGateway_WaitForPayment"))
+                   .thenReturn(gateway -> {
+                       gateway.getEventSubscription().receive();
+                   });
+           Scenario.run(pizzaOrderingSystem).startByKey("PizzaOrderingSystem").fromAfter("Timer_WaitingForPayment").execute();
+                   
+       }
+   }
 
 }
