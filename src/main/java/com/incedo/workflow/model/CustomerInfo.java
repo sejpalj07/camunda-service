@@ -11,6 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class CustomerInfo implements Serializable {
     private String name;
-    private String phonenumber;
+    private String phoneNumber;
     private String alternatePhoneNumber;
 }

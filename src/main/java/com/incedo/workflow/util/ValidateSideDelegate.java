@@ -20,7 +20,6 @@ public class ValidateSideDelegate implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         List<Side> sideList = (List<Side>) execution.getVariable("sideList");
         List<Side> newSideList = new ArrayList<>();
-        log.info("Before removal:" + sideList);
         for (Side side : sideList) {
             String name = side.getSideName();
             boolean isValidSideOrder = Arrays.stream(ValidateSideDelegate.SideName.values())
