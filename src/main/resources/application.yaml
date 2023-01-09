@@ -2,6 +2,11 @@
 camunda.bpm.admin-user:
   id: hari
   password: hari5679
+
+
 #logging:
 #  level:
+camunda:
+  bpm:
+    default-serialization-format: application/json
 #    root: debug
