@@ -1,28 +1,22 @@
 package com.incedo.workflow.model;
 
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CamundaUser {
 
 private String username;
-
-
-
-public CamundaUser(String username) {
-	this.username = username;
-}
-
-public String getUsername() {
-	return username;
-}
-
-public void setUsername(String username) {
-	this.username = username;
-}
-
-@Override
-public String toString() {
-	return "CamundaUser [username=" + username + "]";
-}
-
-
 
 }

@@ -10,6 +10,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.repository.DecisionDefinition;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
+import org.camunda.bpm.engine.task.IdentityLink;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,11 +88,15 @@ public class HomeController {
         return ResponseEntity.ok(sampleName);
     }
     @CrossOrigin
-    @GetMapping("/custom/usertask")
-    public ResponseEntity<List<ListOfTask>> getUserTasks() {
-       List<Task> tasks =taskService.createTaskQuery().taskAssignee("hari").list();
+    @PostMapping(path="/custom/usertask", 
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ListOfTask>> getUserTasks(@Valid @RequestBody ListOfTask tsk) {
+       List<Task> tasks =taskService.createTaskQuery().taskAssignee(tsk.getCamundaUser()).list();
+      
   	   List<ListOfTask> listOfTask=tasks.stream().map(value -> {
-  	      ListOfTask lot = new ListOfTask(); 		 
+  	      ListOfTask lot = new ListOfTask(); 	   
+  	  //get list of Variables 
     	  List<CamundaVariables> listOfVariables = taskService.getVariables(value.getId()).keySet().stream().map(value1->{
   	          CamundaVariables camundaVar = new CamundaVariables();
   		      camundaVar.setCamundaVariableName(value1);
@@ -99,6 +104,13 @@ public class HomeController {
   			     camundaVar.setCamundaVariableValue(taskService.getVariable(value.getId(), value1).toString().toString());
   	          return camundaVar;
   		  }).collect(Collectors.toList());
+    	  List<IdentityLink> groupName=taskService.getIdentityLinksForTask(value.getId());
+     	 groupName.forEach(val->{
+     		lot.setGroupName(val.getGroupId());
+     		lot.setCamundaUser(val.getUserId());
+     		lot.setAssignedType(val.getType());
+     	 });
+     
   	   lot.setCamundaVariable(listOfVariables);       
   	   lot.setTaskTitle(value.getName());
   	   lot.setTaskDef(value.getTaskDefinitionKey());
@@ -107,10 +119,70 @@ public class HomeController {
   	   lot.setDueDate(value.getDueDate());
   	   lot.setOwnerName(value.getOwner());
   	   lot.setCheckSelect(false);
+  	   lot.setTaskId(value.getId());
+  	  // lot.setCamundaUser(tsk.getCamundaUser());
        return lot;
       }).collect(Collectors.toList());
       return ResponseEntity.ok(listOfTask);
     }
+
+    @CrossOrigin
+    @PostMapping(path="/custom/usergrouptask", 
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ListOfTask>> getUserGroupTasks(@Valid @RequestBody ListOfTask tsk) {
+       List<Task> tasks =taskService.createTaskQuery().taskCandidateUser(tsk.getCamundaUser()).list();
+  	   List<ListOfTask> listOfTask=tasks.stream().map(value -> {
+  	      ListOfTask lot = new ListOfTask();
+  	      //get list of Variables 
+    	  List<CamundaVariables> listOfVariables = taskService.getVariables(value.getId()).keySet().stream().map(value1->{
+  	          CamundaVariables camundaVar = new CamundaVariables();
+  		      camundaVar.setCamundaVariableName(value1);
+  		      if(taskService.getVariable(value.getId(), value1)!=null)
+  			     camundaVar.setCamundaVariableValue(taskService.getVariable(value.getId(), value1).toString().toString());
+  	          return camundaVar;
+  		  }).collect(Collectors.toList());
+    	 List<IdentityLink> groupName=taskService.getIdentityLinksForTask(value.getId());
+    	 groupName.forEach(val->{
+    		lot.setGroupName(val.getGroupId());
+    	 });
+    	
+       lot.setCamundaUser(tsk.getCamundaUser());
+  	   lot.setCamundaVariable(listOfVariables);       
+  	   lot.setTaskTitle(value.getName());
+  	   lot.setTaskDef(value.getTaskDefinitionKey());
+  	   lot.setPriority(value.getPriority());
+  	   lot.setTaskCreatedTime(value.getCreateTime());
+  	   lot.setDueDate(value.getDueDate());
+  	   lot.setOwnerName(value.getOwner());
+  	   lot.setCheckSelect(false);
+  	   lot.setTaskId(value.getId());
+       return lot;
+      }).collect(Collectors.toList());
+      return ResponseEntity.ok(listOfTask);
+    }
+    
+    
+    @CrossOrigin
+    @PostMapping(path="/custom/claim", 
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public String DelegateTask(@Valid @RequestBody ListOfTask tsk) {
+    String responseMessage;
+    try {
+       taskService.claim(tsk.getTaskId(), tsk.getCamundaUser());
+     }catch (Exception e) {
+    	 responseMessage="{\"postStatus\""+":\""+e.getMessage()+"\"}";
+    	 return responseMessage;
+     }
+     if(tsk.getCamundaUser()==null)
+    	responseMessage="{\"postStatus\""+":\""+"Task Unclaimed Successfully"+"\"}";
+     else
+         responseMessage="{\"postStatus\""+":\""+"Task Claimed by "+tsk.getCamundaUser()+" Successfully"+"\"}";
+  	 return  responseMessage;
+    }
+    
+    
     
     @CrossOrigin
     @PostMapping(path="/custom/completetask", 
@@ -124,9 +196,9 @@ public class HomeController {
     	   List<Task> tasks =taskService.createTaskQuery().taskDefinitionKey(tskValue.getTaskDef()).taskCreatedOn(tskValue.getTaskCreatedTime()).list();
     	   tasks.forEach(value->{
     	   if(approvalStatus.equals("approved")) 
-    	   taskService.setVariable(value.getId(), "Approval", "approved");
+    	   taskService.setVariable(value.getId(), "AccountManagementApproval", "approved");
     	   else
-    	   taskService.setVariable(value.getId(), "Approval", "rejected");
+    	   taskService.setVariable(value.getId(), "AccountManagementApproval", "rejected");
     	   taskService.complete(value.getId());
     	   });
     		});
@@ -138,5 +210,6 @@ public class HomeController {
     	responseMessage="{\"postStatus\""+":\""+responseMsg+"\"}";
   	 return  responseMessage;
     }
+    
     
 }
