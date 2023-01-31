@@ -31,4 +31,5 @@ public class ListOfTask {
 	private String delegatestate;
 	private String TaskId; 
 	private String AssignedType;
+	private String ProcessDefId;
 }

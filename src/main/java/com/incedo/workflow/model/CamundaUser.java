@@ -18,5 +18,5 @@ import lombok.Setter;
 public class CamundaUser {
 
 private String username;
-
+private String groupname;
 }

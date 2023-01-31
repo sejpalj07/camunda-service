@@ -1,5 +1,6 @@
 package com.incedo.workflow.controller;
 
+import com.incedo.workflow.model.CamundaUser;
 import com.incedo.workflow.model.CamundaVariables;
 import com.incedo.workflow.model.ListOfTask;
 import com.incedo.workflow.model.Order;
@@ -7,6 +8,8 @@ import com.incedo.workflow.model.ProcessDefinitionModel;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.identity.Group;
+import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.repository.DecisionDefinition;
 import org.camunda.bpm.engine.task.IdentityLink;
 import org.camunda.bpm.engine.task.Task;
@@ -52,6 +55,31 @@ public class HomeController {
         this.runtimeService.correlateMessage("orderMessage", bKey, orderMap);
         return new ResponseEntity<>("Pizza Processing BPM is Running.", HttpStatus.OK);
     }
+    
+  @CrossOrigin
+  @GetMapping("/custom/allusers")
+  public ResponseEntity<List<CamundaUser>> getAllUsers() {
+      List<User> users = processEngineService.getIdentityService().createUserQuery().list();
+      List<CamundaUser> camundaUser=users.stream().map(value->{
+    	  CamundaUser camUser=new CamundaUser();	
+    	  camUser.setUsername(value.getId());
+    	  return camUser;
+      }).collect(Collectors.toList());
+      return ResponseEntity.ok(camundaUser);
+  }
+  
+  @CrossOrigin
+  @GetMapping("/custom/allgroups")
+  public ResponseEntity<List<CamundaUser>> getAllGroups() {
+      List<Group> group = processEngineService.getIdentityService().createGroupQuery().list();
+      List<CamundaUser> groupNames=group.stream().map(value->{
+    	  CamundaUser camgroup=new CamundaUser();
+    	  camgroup.setGroupname(value.getId());
+    	  return camgroup;
+      }).collect(Collectors.toList());
+      return ResponseEntity.ok(groupNames);
+  }
+
 
 
 //    @CrossOrigin
@@ -86,128 +114,128 @@ public class HomeController {
 //        return ResponseEntity.ok(sampleName);
 //    }
 
-    @CrossOrigin
-    @PostMapping(path = "/custom/usertask",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ListOfTask>> getUserTasks(@Valid @RequestBody ListOfTask tsk) {
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee(tsk.getCamundaUser()).list();
-
-        List<ListOfTask> listOfTask = tasks.stream().map(value -> {
-            ListOfTask lot = new ListOfTask();
-            //get list of Variables
-            List<CamundaVariables> listOfVariables = taskService.getVariables(value.getId()).keySet().stream().map(value1 -> {
-                CamundaVariables camundaVar = new CamundaVariables();
-                camundaVar.setCamundaVariableName(value1);
-                if (taskService.getVariable(value.getId(), value1) != null)
-                    camundaVar.setCamundaVariableValue(taskService.getVariable(value.getId(), value1).toString().toString());
-                return camundaVar;
-            }).collect(Collectors.toList());
-            List<IdentityLink> groupName = taskService.getIdentityLinksForTask(value.getId());
-            groupName.forEach(val -> {
-                lot.setGroupName(val.getGroupId());
-                lot.setCamundaUser(val.getUserId());
-                lot.setAssignedType(val.getType());
-            });
-
-            lot.setCamundaVariable(listOfVariables);
-            lot.setTaskTitle(value.getName());
-            lot.setTaskDef(value.getTaskDefinitionKey());
-            lot.setPriority(value.getPriority());
-            lot.setTaskCreatedTime(value.getCreateTime());
-            lot.setDueDate(value.getDueDate());
-            lot.setOwnerName(value.getOwner());
-            lot.setCheckSelect(false);
-            lot.setTaskId(value.getId());
-            // lot.setCamundaUser(tsk.getCamundaUser());
-            return lot;
-        }).collect(Collectors.toList());
-        return ResponseEntity.ok(listOfTask);
-    }
-
-    @CrossOrigin
-    @PostMapping(path = "/custom/usergrouptask",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ListOfTask>> getUserGroupTasks(@Valid @RequestBody ListOfTask tsk) {
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateUser(tsk.getCamundaUser()).list();
-        List<ListOfTask> listOfTask = tasks.stream().map(value -> {
-            ListOfTask lot = new ListOfTask();
-            //get list of Variables
-            List<CamundaVariables> listOfVariables = taskService.getVariables(value.getId()).keySet().stream().map(value1 -> {
-                CamundaVariables camundaVar = new CamundaVariables();
-                camundaVar.setCamundaVariableName(value1);
-                if (taskService.getVariable(value.getId(), value1) != null)
-                    camundaVar.setCamundaVariableValue(taskService.getVariable(value.getId(), value1).toString().toString());
-                return camundaVar;
-            }).collect(Collectors.toList());
-            List<IdentityLink> groupName = taskService.getIdentityLinksForTask(value.getId());
-            groupName.forEach(val -> {
-                lot.setGroupName(val.getGroupId());
-            });
-
-            lot.setCamundaUser(tsk.getCamundaUser());
-            lot.setCamundaVariable(listOfVariables);
-            lot.setTaskTitle(value.getName());
-            lot.setTaskDef(value.getTaskDefinitionKey());
-            lot.setPriority(value.getPriority());
-            lot.setTaskCreatedTime(value.getCreateTime());
-            lot.setDueDate(value.getDueDate());
-            lot.setOwnerName(value.getOwner());
-            lot.setCheckSelect(false);
-            lot.setTaskId(value.getId());
-            return lot;
-        }).collect(Collectors.toList());
-        return ResponseEntity.ok(listOfTask);
-    }
-
-
-    @CrossOrigin
-    @PostMapping(path = "/custom/claim",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public String DelegateTask(@Valid @RequestBody ListOfTask tsk) {
-        String responseMessage;
-        try {
-            taskService.claim(tsk.getTaskId(), tsk.getCamundaUser());
-        } catch (Exception e) {
-            responseMessage = "{\"postStatus\"" + ":\"" + e.getMessage() + "\"}";
-            return responseMessage;
-        }
-        if (tsk.getCamundaUser() == null)
-            responseMessage = "{\"postStatus\"" + ":\"" + "Task Unclaimed Successfully" + "\"}";
-        else
-            responseMessage = "{\"postStatus\"" + ":\"" + "Task Claimed by " + tsk.getCamundaUser() + " Successfully" + "\"}";
-        return responseMessage;
-    }
-
-
-    @CrossOrigin
-    @PostMapping(path = "/custom/completetask",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getCompleteTask(@RequestParam("approvalStatus") String approvalStatus, @Valid @RequestBody List<ListOfTask> tsk) {
-        String responseMessage = "";
-        String responseMsg = "";
-        try {
-            tsk.forEach(tskValue -> {
-                List<Task> tasks = taskService.createTaskQuery().taskDefinitionKey(tskValue.getTaskDef()).taskCreatedOn(tskValue.getTaskCreatedTime()).list();
-                tasks.forEach(value -> {
-                    if (approvalStatus.equals("approved"))
-                        taskService.setVariable(value.getId(), "AccountManagementApproval", "approved");
-                    else
-                        taskService.setVariable(value.getId(), "AccountManagementApproval", "rejected");
-                    taskService.complete(value.getId());
-                });
-            });
-        } catch (Exception e) {
-            responseMsg = e.getMessage();
-        }
-        if (responseMsg == "")
-            responseMsg = "Selected tasks " + approvalStatus + " successfully";
-        responseMessage = "{\"postStatus\"" + ":\"" + responseMsg + "\"}";
-        return responseMessage;
-    }
+//    @CrossOrigin
+//    @PostMapping(path = "/custom/usertask",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<ListOfTask>> getUserTasks(@Valid @RequestBody ListOfTask tsk) {
+//        List<Task> tasks = taskService.createTaskQuery().taskAssignee(tsk.getCamundaUser()).list();
+//
+//        List<ListOfTask> listOfTask = tasks.stream().map(value -> {
+//            ListOfTask lot = new ListOfTask();
+//            //get list of Variables
+//            List<CamundaVariables> listOfVariables = taskService.getVariables(value.getId()).keySet().stream().map(value1 -> {
+//                CamundaVariables camundaVar = new CamundaVariables();
+//                camundaVar.setCamundaVariableName(value1);
+//                if (taskService.getVariable(value.getId(), value1) != null)
+//                    camundaVar.setCamundaVariableValue(taskService.getVariable(value.getId(), value1).toString().toString());
+//                return camundaVar;
+//            }).collect(Collectors.toList());
+//            List<IdentityLink> groupName = taskService.getIdentityLinksForTask(value.getId());
+//            groupName.forEach(val -> {
+//                lot.setGroupName(val.getGroupId());
+//                lot.setCamundaUser(val.getUserId());
+//                lot.setAssignedType(val.getType());
+//            });
+//
+//            lot.setCamundaVariable(listOfVariables);
+//            lot.setTaskTitle(value.getName());
+//            lot.setTaskDef(value.getTaskDefinitionKey());
+//            lot.setPriority(value.getPriority());
+//            lot.setTaskCreatedTime(value.getCreateTime());
+//            lot.setDueDate(value.getDueDate());
+//            lot.setOwnerName(value.getOwner());
+//            lot.setCheckSelect(false);
+//            lot.setTaskId(value.getId());
+//            // lot.setCamundaUser(tsk.getCamundaUser());
+//            return lot;
+//        }).collect(Collectors.toList());
+//        return ResponseEntity.ok(listOfTask);
+//    }
+//
+//    @CrossOrigin
+//    @PostMapping(path = "/custom/usergrouptask",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<ListOfTask>> getUserGroupTasks(@Valid @RequestBody ListOfTask tsk) {
+//        List<Task> tasks = taskService.createTaskQuery().taskCandidateUser(tsk.getCamundaUser()).list();
+//        List<ListOfTask> listOfTask = tasks.stream().map(value -> {
+//            ListOfTask lot = new ListOfTask();
+//            //get list of Variables
+//            List<CamundaVariables> listOfVariables = taskService.getVariables(value.getId()).keySet().stream().map(value1 -> {
+//                CamundaVariables camundaVar = new CamundaVariables();
+//                camundaVar.setCamundaVariableName(value1);
+//                if (taskService.getVariable(value.getId(), value1) != null)
+//                    camundaVar.setCamundaVariableValue(taskService.getVariable(value.getId(), value1).toString().toString());
+//                return camundaVar;
+//            }).collect(Collectors.toList());
+//            List<IdentityLink> groupName = taskService.getIdentityLinksForTask(value.getId());
+//            groupName.forEach(val -> {
+//                lot.setGroupName(val.getGroupId());
+//            });
+//
+//            lot.setCamundaUser(tsk.getCamundaUser());
+//            lot.setCamundaVariable(listOfVariables);
+//            lot.setTaskTitle(value.getName());
+//            lot.setTaskDef(value.getTaskDefinitionKey());
+//            lot.setPriority(value.getPriority());
+//            lot.setTaskCreatedTime(value.getCreateTime());
+//            lot.setDueDate(value.getDueDate());
+//            lot.setOwnerName(value.getOwner());
+//            lot.setCheckSelect(false);
+//            lot.setTaskId(value.getId());
+//            return lot;
+//        }).collect(Collectors.toList());
+//        return ResponseEntity.ok(listOfTask);
+//    }
+//
+//
+//    @CrossOrigin
+//    @PostMapping(path = "/custom/claim",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public String DelegateTask(@Valid @RequestBody ListOfTask tsk) {
+//        String responseMessage;
+//        try {
+//            taskService.claim(tsk.getTaskId(), tsk.getCamundaUser());
+//        } catch (Exception e) {
+//            responseMessage = "{\"postStatus\"" + ":\"" + e.getMessage() + "\"}";
+//            return responseMessage;
+//        }
+//        if (tsk.getCamundaUser() == null)
+//            responseMessage = "{\"postStatus\"" + ":\"" + "Task Unclaimed Successfully" + "\"}";
+//        else
+//            responseMessage = "{\"postStatus\"" + ":\"" + "Task Claimed by " + tsk.getCamundaUser() + " Successfully" + "\"}";
+//        return responseMessage;
+//    }
+//
+//
+//    @CrossOrigin
+//    @PostMapping(path = "/custom/completetask",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public String getCompleteTask(@RequestParam("approvalStatus") String approvalStatus, @Valid @RequestBody List<ListOfTask> tsk) {
+//        String responseMessage = "";
+//        String responseMsg = "";
+//        try {
+//            tsk.forEach(tskValue -> {
+//                List<Task> tasks = taskService.createTaskQuery().taskDefinitionKey(tskValue.getTaskDef()).taskCreatedOn(tskValue.getTaskCreatedTime()).list();
+//                tasks.forEach(value -> {
+//                    if (approvalStatus.equals("approved"))
+//                        taskService.setVariable(value.getId(), "AccountManagementApproval", "approved");
+//                    else
+//                        taskService.setVariable(value.getId(), "AccountManagementApproval", "rejected");
+//                    taskService.complete(value.getId());
+//                });
+//            });
+//        } catch (Exception e) {
+//            responseMsg = e.getMessage();
+//        }
+//        if (responseMsg == "")
+//            responseMsg = "Selected tasks " + approvalStatus + " successfully";
+//        responseMessage = "{\"postStatus\"" + ":\"" + responseMsg + "\"}";
+//        return responseMessage;
+//    }
 
 
 }
